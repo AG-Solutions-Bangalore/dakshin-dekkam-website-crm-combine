@@ -85,7 +85,8 @@ const BookingRoomEdit = () => {
   });
 
   const { trigger: submitTrigger, loading: submitLoading } = useApiMutation();
-  const { data: bookingRoomById, loading: isFetching } = useFetchBookingRoom(decryptedId);
+  const { data: bookingRoomById, loading: isFetching } =
+    useFetchBookingRoom(decryptedId);
 
   useEffect(() => {
     if (decryptedId && bookingRoomById?.data) {
@@ -147,7 +148,7 @@ const BookingRoomEdit = () => {
     e.preventDefault();
 
     const missingFields = [];
-    
+
     // Required fields validation
     if (!formData.guest_name) missingFields.push("Guest Name");
     if (!formData.guest_email) missingFields.push("Email");
@@ -188,7 +189,7 @@ const BookingRoomEdit = () => {
         method: "put",
         data: formData,
       });
-      
+
       if (response?.code === 201) {
         toast({
           title: "Success",
@@ -206,7 +207,8 @@ const BookingRoomEdit = () => {
     } catch (error) {
       toast({
         title: "Error",
-        description: error?.response?.data?.message || "Failed to update room booking",
+        description:
+          error?.response?.data?.message || "Failed to update room booking",
         variant: "destructive",
       });
     }
@@ -232,21 +234,26 @@ const BookingRoomEdit = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {/* Guest Name */}
                   <div>
-                    <label className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}>
-                      Guest Name<span className="text-red-500">*</span>
+                    <label
+                      className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
+                    >
+                      Full Name of the Guest
+                      <span className="text-red-500">*</span>
                     </label>
                     <Input
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={formData.guest_name}
                       onChange={(e) => handleInputChange(e, "guest_name")}
                       maxLength={100}
-                      placeholder="Enter guest name"
+                      placeholder="Enter Full Name of the Guest"
                     />
                   </div>
 
                   {/* Guest Email */}
                   <div>
-                    <label className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}>
+                    <label
+                      className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
+                    >
                       Email<span className="text-red-500">*</span>
                     </label>
                     <Input
@@ -261,8 +268,11 @@ const BookingRoomEdit = () => {
 
                   {/* Full Name */}
                   <div>
-                    <label className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}>
-                      Full Name<span className="text-red-500">*</span>
+                    <label
+                      className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
+                    >
+                      Full Name of the person
+                      <span className="text-red-500">*</span>
                     </label>
                     <Input
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -275,13 +285,17 @@ const BookingRoomEdit = () => {
 
                   {/* Mobile Number */}
                   <div>
-                    <label className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}>
+                    <label
+                      className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
+                    >
                       Mobile Number<span className="text-red-500">*</span>
                     </label>
                     <Input
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={formData.guest_mobile_number}
-                      onChange={(e) => handleInputChange(e, "guest_mobile_number")}
+                      onChange={(e) =>
+                        handleInputChange(e, "guest_mobile_number")
+                      }
                       maxLength={10}
                       placeholder="Enter mobile number"
                     />
@@ -289,36 +303,44 @@ const BookingRoomEdit = () => {
 
                   {/* Native Place */}
                   <div>
-                    <label className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}>
-                      Native Place<span className="text-red-500">*</span>
+                    <label
+                      className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
+                    >
+                      Native in Kutch<span className="text-red-500">*</span>
                     </label>
                     <Input
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={formData.guest_native}
                       onChange={(e) => handleInputChange(e, "guest_native")}
                       maxLength={100}
-                      placeholder="Enter native place"
+                      placeholder="Enter Native in Kutch"
                     />
                   </div>
 
                   {/* City */}
                   <div>
-                    <label className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}>
-                      City<span className="text-red-500">*</span>
+                    <label
+                      className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
+                    >
+                      City you are coming from
+                      <span className="text-red-500">*</span>
                     </label>
                     <Input
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={formData.guest_city}
                       onChange={(e) => handleInputChange(e, "guest_city")}
                       maxLength={100}
-                      placeholder="Enter city"
+                      placeholder="Enter City"
                     />
                   </div>
 
                   {/* Number of People */}
                   <div>
-                    <label className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}>
-                      Number of People<span className="text-red-500">*</span>
+                    <label
+                      className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
+                    >
+                      Total number of Guests
+                      <span className="text-red-500">*</span>
                     </label>
                     <Input
                       type="number"
@@ -326,80 +348,103 @@ const BookingRoomEdit = () => {
                       value={formData.guest_no_people}
                       onChange={(e) => handleInputChange(e, "guest_no_people")}
                       min="1"
-                      placeholder="Enter number of people"
+                      placeholder="Enter Total number of Guests"
                     />
                   </div>
 
                   {/* Purpose of Visit */}
                   <div>
-                    <label className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}>
-                      Purpose of Visit<span className="text-red-500">*</span>
+                    <label
+                      className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
+                    >
+                      Purpose of the visit
+                      <span className="text-red-500">*</span>
                     </label>
                     <Input
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={formData.guest_purpose_visit}
-                      onChange={(e) => handleInputChange(e, "guest_purpose_visit")}
+                      onChange={(e) =>
+                        handleInputChange(e, "guest_purpose_visit")
+                      }
                       maxLength={100}
-                      placeholder="Enter purpose of visit"
+                      placeholder="Enter Purpose of the visit"
                     />
                   </div>
 
                   {/* Check-in Date */}
                   <div>
-                    <label className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}>
+                    <label
+                      className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
+                    >
                       Check-in Date<span className="text-red-500">*</span>
                     </label>
                     <Input
                       type="date"
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={formData.guest_checkIn_date}
-                      onChange={(e) => handleInputChange(e, "guest_checkIn_date")}
+                      onChange={(e) =>
+                        handleInputChange(e, "guest_checkIn_date")
+                      }
                     />
                   </div>
 
                   {/* Check-in Time */}
                   <div>
-                    <label className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}>
+                    <label
+                      className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
+                    >
                       Check-in Time<span className="text-red-500">*</span>
                     </label>
                     <Input
                       type="time"
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={formData.guest_checkIn_time}
-                      onChange={(e) => handleInputChange(e, "guest_checkIn_time")}
+                      onChange={(e) =>
+                        handleInputChange(e, "guest_checkIn_time")
+                      }
                     />
                   </div>
 
                   {/* Check-out Date */}
                   <div>
-                    <label className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}>
+                    <label
+                      className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
+                    >
                       Check-out Date<span className="text-red-500">*</span>
                     </label>
                     <Input
                       type="date"
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={formData.guest_checkOut_date}
-                      onChange={(e) => handleInputChange(e, "guest_checkOut_date")}
+                      onChange={(e) =>
+                        handleInputChange(e, "guest_checkOut_date")
+                      }
                     />
                   </div>
 
                   {/* Check-out Time */}
                   <div>
-                    <label className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}>
+                    <label
+                      className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
+                    >
                       Check-out Time<span className="text-red-500">*</span>
                     </label>
                     <Input
                       type="time"
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={formData.guest_checkOut_time}
-                      onChange={(e) => handleInputChange(e, "guest_checkOut_time")}
+                      onChange={(e) =>
+                        handleInputChange(e, "guest_checkOut_time")
+                      }
                     />
                   </div>
 
                   {/* Status Dropdown */}
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
-                      <label className={`text-sm font-medium ${ButtonConfig.cardLabel}`}>
+                      <label
+                        className={`text-sm font-medium ${ButtonConfig.cardLabel}`}
+                      >
                         Status <span className="text-red-500">*</span>
                       </label>
                     </div>
@@ -413,23 +458,30 @@ const BookingRoomEdit = () => {
 
                   {/* Present Address - Full width */}
                   <div className="md:col-span-2">
-                    <label className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}>
-                      Present Address<span className="text-red-500">*</span>
+                    <label
+                      className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
+                    >
+                      Permanent Address of the Guest
+                      <span className="text-red-500">*</span>
                     </label>
                     <Textarea
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={formData.guest_present_address}
-                      onChange={(e) => handleInputChange(e, "guest_present_address")}
+                      onChange={(e) =>
+                        handleInputChange(e, "guest_present_address")
+                      }
                       maxLength={500}
-                      placeholder="Enter present address"
+                      placeholder="Enter Permanent Address of the Guest"
                       rows={3}
                     />
                   </div>
 
                   {/* Guest Note - Full width */}
                   <div className="md:col-span-2">
-                    <label className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}>
-                      Guest Note
+                    <label
+                      className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
+                    >
+                      Comments or any specific request
                     </label>
                     <Textarea
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -443,7 +495,7 @@ const BookingRoomEdit = () => {
                 </div>
               </CardContent>
             </Card>
-            
+
             <div className="flex flex-row items-center gap-2 justify-end">
               <Button
                 type="submit"

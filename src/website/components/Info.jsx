@@ -49,7 +49,7 @@ const Info = () => {
             <p className="text-gray-700 leading-relaxed mb-2">
               Societies, trusts, and {" "}
               <strong>75 or more members</strong> can also enroll as{" "}
-              <strong>Associate Life Members</strong>.
+              <strong>Associate Life Members</strong> Mahajans of the KDO Jain Community of South india.
             </p>
 
             <p className="text-gray-700 leading-relaxed">
@@ -58,7 +58,7 @@ const Info = () => {
               generations.
             </p>
 
-            <div className="bg-white shadow-lg rounded-xl p-6 border border-gray-100">
+            <div className="bg-white shadow-lg rounded-xl p-6 border border-gray-100 mt-2">
               <h3 className="text-xl font-semibold text-darken mb-4 border-b pb-2">
                 Membership Details
               </h3>
@@ -86,7 +86,7 @@ const Info = () => {
                   <ul className="list-disc list-inside text-gray-700 mt-2 space-y-1">
                     <li>
                       <strong>Eligibility:</strong> Registered Society, Trust,
-                      or Mahajan with 75+ members
+                      or Mahajan with 75+ members of the KDO Jain community of South India
                     </li>
                     <li>
                       <strong>Fee:</strong> ₹501 (one-time)

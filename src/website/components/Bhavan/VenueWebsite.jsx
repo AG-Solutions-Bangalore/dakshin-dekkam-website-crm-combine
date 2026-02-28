@@ -69,25 +69,25 @@ export default function VenueWebsite() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white">
       <section id="features" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16" data-aos="fade-up">
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
               Our Venue Spaces & Amenities
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-orange-300 mx-auto rounded-full"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-red-400 to-orange-300 mx-auto rounded-full"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, idx) => (
               <div
                 key={idx}
-                className="group bg-amber-50 p-8 rounded-2xl shadow-sm hover:shadow-lg transition duration-300 border border-amber-200"
+                className="group bg-red-50 p-8 rounded-2xl shadow-sm hover:shadow-lg transition duration-300 border border-red-200"
                 data-aos="fade-up"
                 data-aos-delay={idx * 100}
               >
                 <div className="flex items-center justify-between">
-                  <div className="p-4 bg-amber-100 text-amber-700 rounded-xl group-hover:scale-110 transition duration-300">
+                  <div className="p-4 bg-red-100 text-red-700 rounded-xl group-hover:scale-110 transition duration-300">
                     {feature.icon}
                   </div>
 
@@ -100,12 +100,12 @@ export default function VenueWebsite() {
                   {feature.description}
                 </p> */}
                 {feature.seating && feature.capacity && (
-                  <div className="space-y-2 pt-6 border-t border-amber-200 mt-1">
+                  <div className="space-y-2 pt-6 border-t border-red-200 mt-1">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600 font-medium">
                         Seating:
                       </span>
-                      <span className="text-amber-700 font-bold">
+                      <span className="text-red-700 font-bold">
                         {feature.seating}
                       </span>
                     </div>
@@ -113,7 +113,7 @@ export default function VenueWebsite() {
                       <span className="text-gray-600 font-medium">
                         Max Capacity:
                       </span>
-                      <span className="text-amber-700 font-bold">
+                      <span className="text-red-700 font-bold">
                         {feature.capacity}
                       </span>
                     </div>
@@ -124,7 +124,7 @@ export default function VenueWebsite() {
                     {feature.highlights.map((highlight, i) => (
                       <span
                         key={i}
-                        className="px-3 py-1 bg-amber-200 text-amber-800 text-xs font-semibold rounded-full"
+                        className="px-3 py-1 bg-red-200 text-red-800 text-xs font-semibold rounded-full"
                       >
                         {highlight}
                       </span>

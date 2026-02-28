@@ -333,8 +333,9 @@ function Footer() {
           <div className="w-full h-40 rounded-lg overflow-hidden shadow-lg">
             <iframe
               src={
-                websitecompany?.google_map_url ||
-                "https://www.google.com/maps?q=Kutchi%20Bhavan&output=embed"
+                websitecompany?.google_map_url
+                  ? websitecompany.google_map_url
+                  : "https://www.google.com/maps?q=Kutchi%20Bhavan&output=embed&t=m"
               }
               width="100%"
               height="100%"

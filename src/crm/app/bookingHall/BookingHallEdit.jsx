@@ -239,7 +239,7 @@ const BookingHallEdit = () => {
                       className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
                     >
                       Guest's Full Name
-                    <span className="text-red-500">*</span>
+                      <span className="text-red-500">*</span>
                     </label>
                     <Input
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -454,12 +454,11 @@ const BookingHallEdit = () => {
                     />
                   </div>
 
-                  {/* Address - Full width */}
                   <div className="md:col-span-2">
                     <label
                       className={`block ${ButtonConfig.cardLabel} text-sm mb-2 font-medium`}
                     >
-                      Address<span className="text-red-500">*</span>
+                      Address
                     </label>
                     <Textarea
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
