@@ -32,6 +32,13 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { Input } from "../ui/input";
 const MemberTable = ({ data, refetch, navigate, title, type }) => {
   const [sorting, setSorting] = useState([]);
@@ -149,8 +156,8 @@ const MemberTable = ({ data, refetch, navigate, title, type }) => {
             className="pl-8 bg-gray-50 border-gray-200 focus:border-gray-300 focus:ring-gray-200"
           />
         </div>
-        <div className="space-x-3">
-          <DropdownMenu>
+        <div className="space-x-3 flex">
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-2">
                 Status <ChevronDown className="ml-2 h-4 w-4" />
@@ -158,27 +165,41 @@ const MemberTable = ({ data, refetch, navigate, title, type }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
               <DropdownMenuCheckboxItem
-                checked={statusFilter === "all"}
+                checked={statusFilter == "all"}
                 onCheckedChange={() => setStatusFilter("all")}
               >
                 All
               </DropdownMenuCheckboxItem>
 
               <DropdownMenuCheckboxItem
-                checked={statusFilter === "Active"}
+                checked={statusFilter == "Active"}
                 onCheckedChange={() => setStatusFilter("Active")}
               >
                 Active
               </DropdownMenuCheckboxItem>
 
               <DropdownMenuCheckboxItem
-                checked={statusFilter === "Inactive"}
+                checked={statusFilter == "Inactive"}
                 onCheckedChange={() => setStatusFilter("Inactive")}
               >
                 Inactive
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
+          <Select
+            value={statusFilter}
+            onValueChange={(value) => setStatusFilter(value)}
+          >
+            <SelectTrigger className="w-[180px] ml-2">
+              <SelectValue placeholder="Select Status" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="Active">Active</SelectItem>
+              <SelectItem value="Inactive">Inactive</SelectItem>
+            </SelectContent>
+          </Select>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto ">
@@ -218,6 +239,17 @@ const MemberTable = ({ data, refetch, navigate, title, type }) => {
               }}
             >
               <SquarePlus className="h-4 w-4 " /> Member
+            </Button>
+          )}
+          {type == "new" && (
+            <Button
+              variant="default"
+              className={`ml-2  ${ButtonConfig.backgroundColor} ${ButtonConfig.hoverBackgroundColor} ${ButtonConfig.textColor} `}
+              onClick={() => {
+                navigate("/signup");
+              }}
+            >
+              <SquarePlus className="h-4 w-4 " /> New Register
             </Button>
           )}
         </div>

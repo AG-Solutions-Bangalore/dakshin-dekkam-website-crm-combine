@@ -6,7 +6,6 @@ import MemberTable from "@/crm/components/MemberTable/MemberTable";
 import { useFetchMemberData } from "@/hooks/useApi";
 import { useNavigate } from "react-router-dom";
 import Page from "../page/page";
-
 const MemberList = () => {
   const {
     data: memberdata,
@@ -27,7 +26,12 @@ const MemberList = () => {
   return (
     <Page>
       <div className="w-full space-y-8">
-        <MemberTable title="Member List" data={allMembers} refetch={refetch} navigate={navigate} />
+        <MemberTable
+          title="Member List"
+          data={allMembers}
+          refetch={refetch}
+          navigate={navigate}
+        />
       </div>
     </Page>
   );

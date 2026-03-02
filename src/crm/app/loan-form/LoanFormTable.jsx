@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState } from 'react';
+import { useState } from "react";
 import { Button } from "@/crm/components/ui/button";
 import {
   Table,
@@ -23,7 +23,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronDown, Search, Eye } from "lucide-react";
+import { ChevronDown, Search, Eye, SquarePlus } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -35,7 +35,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 import useToken from "@/api/usetoken";
-import { encryptId } from '@/crm/utils/encyrption/Encyrption';
+import { encryptId } from "@/crm/utils/encyrption/Encyrption";
 
 const LoanFormTable = ({ data, refetch, navigate, title }) => {
   const { toast } = useToast();
@@ -55,24 +55,24 @@ const LoanFormTable = ({ data, refetch, navigate, title }) => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-        }
+        },
       );
       return response.data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['loanFormData'] });
+      queryClient.invalidateQueries({ queryKey: ["loanFormData"] });
       toast({
         title: "Success",
-        description: data.message || 'Status updated successfully',
+        description: data.message || "Status updated successfully",
         variant: "success",
       });
     },
     onError: (error) => {
       toast({
         title: "Error",
-        description: error.response?.data?.message || 'Failed to update status',
+        description: error.response?.data?.message || "Failed to update status",
         variant: "destructive",
       });
       console.error("Status update error:", error);
@@ -84,14 +84,25 @@ const LoanFormTable = ({ data, refetch, navigate, title }) => {
   };
 
   const handleViewClick = (loanId) => {
-
     navigate(`/crm/loan-view/${encodeURIComponent(encryptId(loanId))}`);
   };
 
   const statusOptions = [
-    { value: "Pending", label: "Pending", color: "bg-yellow-100 text-yellow-800" },
-    { value: "Approved", label: "Approved", color: "bg-green-100 text-green-800" },
-    { value: "Processing", label: "Processing", color: "bg-blue-100 text-blue-800" },
+    {
+      value: "Pending",
+      label: "Pending",
+      color: "bg-yellow-100 text-yellow-800",
+    },
+    {
+      value: "Approved",
+      label: "Approved",
+      color: "bg-green-100 text-green-800",
+    },
+    {
+      value: "Processing",
+      label: "Processing",
+      color: "bg-blue-100 text-blue-800",
+    },
     { value: "Cancel", label: "Cancel", color: "bg-red-100 text-red-800" },
   ];
 
@@ -180,13 +191,13 @@ const LoanFormTable = ({ data, refetch, navigate, title }) => {
       cell: ({ row }) => {
         const status = row.getValue("loans_status");
         const loanId = row.original.id;
-        const currentStatus = statusOptions.find(opt => opt.value === status);
+        const currentStatus = statusOptions.find((opt) => opt.value === status);
 
         return (
           <Popover>
             <PopoverTrigger asChild>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className={`${currentStatus?.color || "bg-gray-100 text-gray-800"} border-0`}
                 disabled={statusMutation.isPending}
               >
@@ -201,7 +212,9 @@ const LoanFormTable = ({ data, refetch, navigate, title }) => {
                     key={option.value}
                     variant="ghost"
                     className={`w-full justify-start ${option.color} ${
-                      status === option.value ? "ring-2 ring-offset-1 ring-gray-400" : ""
+                      status === option.value
+                        ? "ring-2 ring-offset-1 ring-gray-400"
+                        : ""
                     }`}
                     onClick={() => handleStatusChange(loanId, option.value)}
                     disabled={statusMutation.isPending}
@@ -220,7 +233,7 @@ const LoanFormTable = ({ data, refetch, navigate, title }) => {
       header: "Actions",
       cell: ({ row }) => {
         const loan = row.original;
-        
+
         return (
           <div className="flex items-center space-x-2">
             {/* View Button */}
@@ -296,6 +309,15 @@ const LoanFormTable = ({ data, refetch, navigate, title }) => {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
+        <Button
+          variant="default"
+          className={`ml-2  ${ButtonConfig.backgroundColor} ${ButtonConfig.hoverBackgroundColor} ${ButtonConfig.textColor} `}
+          onClick={() => {
+            navigate("/loan");
+          }}
+        >
+          <SquarePlus className="h-4 w-4 " /> Loan Form
+        </Button>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -311,7 +333,7 @@ const LoanFormTable = ({ data, refetch, navigate, title }) => {
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -329,7 +351,7 @@ const LoanFormTable = ({ data, refetch, navigate, title }) => {
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

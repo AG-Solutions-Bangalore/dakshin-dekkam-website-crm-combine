@@ -1,10 +1,10 @@
-import { useState, useRef } from 'react';
-import { 
-  MapPin, 
-  User, 
-  Mail, 
-  Phone, 
-  Home, 
+import { useState, useRef } from "react";
+import {
+  MapPin,
+  User,
+  Mail,
+  Phone,
+  Home,
   Calendar,
   BookOpen,
   GraduationCap,
@@ -14,60 +14,60 @@ import {
   DollarSign,
   Users,
   Loader,
-} from 'lucide-react';
-import { useApiMutation } from '@/hooks/useApiMutation';
-import { useFetchBranch } from '@/hooks/useApi';
+} from "lucide-react";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { useFetchBranch } from "@/hooks/useApi";
 
-import InputField from '@/website/components/common/InputField';
-import SelectField from '@/website/components/common/SelectField';
-import { showErrorToast, showSuccessToast } from '../../utils/toast';
-import { CREATE_LOAN_API } from '@/api';
+import InputField from "@/website/components/common/InputField";
+import SelectField from "@/website/components/common/SelectField";
+import { showErrorToast, showSuccessToast } from "../../utils/toast";
+import { CREATE_LOAN_API } from "@/api";
 
 const LoanForm = () => {
   const [formData, setFormData] = useState({
-    branch_id: '',
-    loans_type: 'Education Loan',
-    user_full_name: '',
-    user_email: '',
-    user_dob: '',
-    user_gender: '',
-    user_residentaial_address: '',
-    user_city: '',
-    user_pincode: '',
-    user_mobile_number: '',
-    user_aadhar_number: '',
-    user_parents_name: '',
-    user_parents_occupation: '',
-    user_annual_income: '',
-    user_no_dependents: '',
-    user_college_degree: '',
-    user_qualification: '',
-    user_degree_percentage: '',
-    user_school_percentage: '',
-    user_college_percentage: '',
-    user_entrance_exam: '',
-    user_entrance_exam_score: '',
-    user_education_loan_for: '',
-    user_college_name: '',
-    user_course_name: '',
-    user_course_duration: '',
-    user_course_date: '',
-    user_college_address: '',
-    user_website_number_of_college: '',
-    user_total_fees: '',
-    user_total_loans: '',
-    user_other_loans: '',
-    user_intend_to_repay: '',
-    user_career_goals: '',
-    user_passport_photo: '',
-    user_aadharcard_photo: '',
-    user_school_marksheet_photo: '',
-    user_college_marksheet_photo: '',
-    user_college_fee_structure: '',
-    user_college_admission_letter: '',
-    user_other_letter: '',
-    user_previous_year_marksheet: '',
-    loan_required_copy: 'No'
+    branch_id: "",
+    loans_type: "Education Loan",
+    user_full_name: "",
+    user_email: "",
+    user_dob: "",
+    user_gender: "",
+    user_residentaial_address: "",
+    user_city: "",
+    user_pincode: "",
+    user_mobile_number: "",
+    user_aadhar_number: "",
+    user_parents_name: "",
+    user_parents_occupation: "",
+    user_annual_income: "",
+    user_no_dependents: "",
+    user_college_degree: "",
+    user_qualification: "",
+    user_degree_percentage: "",
+    user_school_percentage: "",
+    user_college_percentage: "",
+    user_entrance_exam: "",
+    user_entrance_exam_score: "",
+    user_education_loan_for: "",
+    user_college_name: "",
+    user_course_name: "",
+    user_course_duration: "",
+    user_course_date: "",
+    user_college_address: "",
+    user_website_number_of_college: "",
+    user_total_fees: "",
+    user_total_loans: "",
+    user_other_loans: "",
+    user_intend_to_repay: "",
+    user_career_goals: "",
+    user_passport_photo: "",
+    user_aadharcard_photo: "",
+    user_school_marksheet_photo: "",
+    user_college_marksheet_photo: "",
+    user_college_fee_structure: "",
+    user_college_admission_letter: "",
+    user_other_letter: "",
+    user_previous_year_marksheet: "",
+    loan_required_copy: "No",
   });
 
   const [declarationAccepted, setDeclarationAccepted] = useState(false);
@@ -117,97 +117,105 @@ const LoanForm = () => {
     user_college_fee_structure: useRef(null),
     user_college_admission_letter: useRef(null),
     user_other_letter: useRef(null),
-    user_previous_year_marksheet: useRef(null)
+    user_previous_year_marksheet: useRef(null),
   };
 
   const genderOptions = [
-    { value: 'Male', label: 'Male' },
-    { value: 'Female', label: 'Female' },
-    { value: 'Other', label: 'Other' }
+    { value: "Male", label: "Male" },
+    { value: "Female", label: "Female" },
+    { value: "Other", label: "Other" },
   ];
 
   const qualificationOptions = [
-    { value: '10th', label: '10th Standard' },
-    { value: '12th', label: '12th Standard' },
-    { value: 'Diploma', label: 'Diploma' },
-    { value: 'Undergraduate', label: 'Undergraduate' },
-    { value: 'Postgraduate', label: 'Postgraduate' },
-    { value: 'PhD', label: 'PhD' }
+    { value: "10th", label: "10th Standard" },
+    { value: "12th", label: "12th Standard" },
+    { value: "Diploma", label: "Diploma" },
+    { value: "Undergraduate", label: "Undergraduate" },
+    { value: "Postgraduate", label: "Postgraduate" },
+    { value: "PhD", label: "PhD" },
   ];
 
   const educationLevelOptions = [
-    { value: 'Undergraduate', label: 'Undergraduate' },
-    { value: 'Postgraduate', label: 'Postgraduate' },
-    { value: 'Diploma', label: 'Diploma' },
-    { value: 'Certificate Course', label: 'Certificate Course' },
-    { value: 'PhD', label: 'PhD' }
+    { value: "Undergraduate", label: "Undergraduate" },
+    { value: "Postgraduate", label: "Postgraduate" },
+    { value: "Diploma", label: "Diploma" },
+    { value: "Certificate Course", label: "Certificate Course" },
+    { value: "PhD", label: "PhD" },
   ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     // Mobile number (10 digits)
-    if (name === 'user_mobile_number') {
-      const numericValue = value.replace(/\D/g, '');
+    if (name === "user_mobile_number") {
+      const numericValue = value.replace(/\D/g, "");
       if (numericValue.length <= 10) {
         setFormData({ ...formData, [name]: numericValue });
-        setErrors({ ...errors, [name]: '' });
+        setErrors({ ...errors, [name]: "" });
       }
       return;
     }
 
     // Aadhar number (12 digits)
-    if (name === 'user_aadhar_number') {
-      const numericValue = value.replace(/\D/g, '');
+    if (name === "user_aadhar_number") {
+      const numericValue = value.replace(/\D/g, "");
       if (numericValue.length <= 12) {
         setFormData({ ...formData, [name]: numericValue });
-        setErrors({ ...errors, [name]: '' });
+        setErrors({ ...errors, [name]: "" });
       }
       return;
     }
 
     // Pincode (6 digits)
-    if (name === 'user_pincode') {
-      const numericValue = value.replace(/\D/g, '');
+    if (name === "user_pincode") {
+      const numericValue = value.replace(/\D/g, "");
       if (numericValue.length <= 6) {
         setFormData({ ...formData, [name]: numericValue });
-        setErrors({ ...errors, [name]: '' });
+        setErrors({ ...errors, [name]: "" });
       }
       return;
     }
 
     // Numeric fields that allow decimals for percentages
-    if (name === 'user_degree_percentage' || name === 'user_school_percentage' || name === 'user_college_percentage') {
+    if (
+      name === "user_degree_percentage" ||
+      name === "user_school_percentage" ||
+      name === "user_college_percentage"
+    ) {
       // Allow numbers and decimal point
-      const decimalValue = value.replace(/[^\d.]/g, '');
+      const decimalValue = value.replace(/[^\d.]/g, "");
       // Ensure only one decimal point
-      const parts = decimalValue.split('.');
+      const parts = decimalValue.split(".");
       if (parts.length <= 2) {
         setFormData({ ...formData, [name]: decimalValue });
-        setErrors({ ...errors, [name]: '' });
+        setErrors({ ...errors, [name]: "" });
       }
       return;
     }
 
     // Other numeric fields (no decimals)
-    if (name === 'user_no_dependents' || name === 'user_annual_income' || 
-        name === 'user_total_fees' || name === 'user_total_loans' ||
-        name === 'user_course_duration') {
-      const numericValue = value.replace(/\D/g, '');
+    if (
+      name === "user_no_dependents" ||
+      name === "user_annual_income" ||
+      name === "user_total_fees" ||
+      name === "user_total_loans" ||
+      name === "user_course_duration"
+    ) {
+      const numericValue = value.replace(/\D/g, "");
       setFormData({ ...formData, [name]: numericValue });
-      setErrors({ ...errors, [name]: '' });
+      setErrors({ ...errors, [name]: "" });
       return;
     }
 
     setFormData({ ...formData, [name]: value });
-    setErrors({ ...errors, [name]: '' });
+    setErrors({ ...errors, [name]: "" });
   };
 
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     if (files && files[0]) {
       setFormData({ ...formData, [name]: files[0] });
-      setErrors({ ...errors, [name]: '' });
+      setErrors({ ...errors, [name]: "" });
     }
   };
 
@@ -215,77 +223,113 @@ const LoanForm = () => {
     let newErrors = {};
 
     // Personal Information - ALL REQUIRED
-    if (!formData.branch_id) newErrors.branch_id = 'Branch selection is required';
-    if (!formData.loans_type) newErrors.loans_type = 'Loan type is required';
-    if (!formData.user_full_name?.trim()) newErrors.user_full_name = 'Applicant\'s full name is required';
+    if (!formData.branch_id)
+      newErrors.branch_id = "Branch selection is required";
+    if (!formData.loans_type) newErrors.loans_type = "Loan type is required";
+    if (!formData.user_full_name?.trim())
+      newErrors.user_full_name = "Applicant's full name is required";
     if (!formData.user_email?.trim()) {
-      newErrors.user_email = 'Email is required';
+      newErrors.user_email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.user_email)) {
-      newErrors.user_email = 'Enter a valid email';
+      newErrors.user_email = "Enter a valid email";
     }
-    if (!formData.user_dob) newErrors.user_dob = 'Date of birth is required';
-    if (!formData.user_gender) newErrors.user_gender = 'Gender is required';
-    if (!formData.user_residentaial_address?.trim()) newErrors.user_residentaial_address = 'Residential address is required';
-    if (!formData.user_city?.trim()) newErrors.user_city = 'City is required';
+    if (!formData.user_dob) newErrors.user_dob = "Date of birth is required";
+    if (!formData.user_gender) newErrors.user_gender = "Gender is required";
+    if (!formData.user_residentaial_address?.trim())
+      newErrors.user_residentaial_address = "Residential address is required";
+    if (!formData.user_city?.trim()) newErrors.user_city = "City is required";
     if (!formData.user_pincode) {
-      newErrors.user_pincode = 'Pincode is required';
+      newErrors.user_pincode = "Pincode is required";
     } else if (!/^[0-9]{6}$/.test(formData.user_pincode)) {
-      newErrors.user_pincode = 'Enter a valid 6-digit pincode';
+      newErrors.user_pincode = "Enter a valid 6-digit pincode";
     }
     if (!formData.user_mobile_number) {
-      newErrors.user_mobile_number = 'Mobile number is required';
+      newErrors.user_mobile_number = "Mobile number is required";
     } else if (!/^[0-9]{10}$/.test(formData.user_mobile_number)) {
-      newErrors.user_mobile_number = 'Enter a valid 10-digit number';
+      newErrors.user_mobile_number = "Enter a valid 10-digit number";
     }
     if (!formData.user_aadhar_number) {
-      newErrors.user_aadhar_number = 'Aadhar number is required';
+      newErrors.user_aadhar_number = "Aadhar number is required";
     } else if (!/^[0-9]{12}$/.test(formData.user_aadhar_number)) {
-      newErrors.user_aadhar_number = 'Enter a valid 12-digit Aadhar number';
+      newErrors.user_aadhar_number = "Enter a valid 12-digit Aadhar number";
     }
 
     // Family Information - ALL REQUIRED
-    if (!formData.user_parents_name?.trim()) newErrors.user_parents_name = 'Parent/Guardian name is required';
-    if (!formData.user_parents_occupation?.trim()) newErrors.user_parents_occupation = 'Parent\'s occupation is required';
-    if (!formData.user_annual_income) newErrors.user_annual_income = 'Annual income is required';
-    if (!formData.user_no_dependents) newErrors.user_no_dependents = 'Number of dependents is required';
+    if (!formData.user_parents_name?.trim())
+      newErrors.user_parents_name = "Parent/Guardian name is required";
+    if (!formData.user_parents_occupation?.trim())
+      newErrors.user_parents_occupation = "Parent's occupation is required";
+    if (!formData.user_annual_income)
+      newErrors.user_annual_income = "Annual income is required";
+    if (!formData.user_no_dependents)
+      newErrors.user_no_dependents = "Number of dependents is required";
 
     // Educational Background - ALL REQUIRED
-    if (!formData.user_college_degree?.trim()) newErrors.user_college_degree = 'Current qualification is required';
-    if (!formData.user_qualification) newErrors.user_qualification = 'Qualification level is required';
-    if (!formData.user_degree_percentage) newErrors.user_degree_percentage = 'Degree percentage is required';
-    if (!formData.user_school_percentage) newErrors.user_school_percentage = 'School percentage is required';
-    if (!formData.user_college_percentage) newErrors.user_college_percentage = 'College percentage is required';
-    if (!formData.user_entrance_exam?.trim()) newErrors.user_entrance_exam = 'Entrance exam name is required';
-    if (!formData.user_entrance_exam_score?.trim()) newErrors.user_entrance_exam_score = 'Entrance exam score is required';
+    if (!formData.user_college_degree?.trim())
+      newErrors.user_college_degree = "Current qualification is required";
+    if (!formData.user_qualification)
+      newErrors.user_qualification = "Qualification level is required";
+    if (!formData.user_degree_percentage)
+      newErrors.user_degree_percentage = "Degree percentage is required";
+    if (!formData.user_school_percentage)
+      newErrors.user_school_percentage = "School percentage is required";
+    if (!formData.user_college_percentage)
+      newErrors.user_college_percentage = "College percentage is required";
+    if (!formData.user_entrance_exam?.trim())
+      newErrors.user_entrance_exam = "Entrance exam name is required";
+    if (!formData.user_entrance_exam_score?.trim())
+      newErrors.user_entrance_exam_score = "Entrance exam score is required";
 
     // Course Information - ALL REQUIRED
-    if (!formData.user_education_loan_for) newErrors.user_education_loan_for = 'Education level is required';
-    if (!formData.user_college_name?.trim()) newErrors.user_college_name = 'College name is required';
-    if (!formData.user_course_name?.trim()) newErrors.user_course_name = 'Course name is required';
-    if (!formData.user_course_duration) newErrors.user_course_duration = 'Course duration is required';
-    if (!formData.user_course_date) newErrors.user_course_date = 'Course start date is required';
-    if (!formData.user_college_address?.trim()) newErrors.user_college_address = 'College address is required';
-    if (!formData.user_website_number_of_college?.trim()) newErrors.user_website_number_of_college = 'Website and contact details are required';
-    if (!formData.user_total_fees) newErrors.user_total_fees = 'Total fees is required';
-    if (!formData.user_total_loans) newErrors.user_total_loans = 'Loan amount required is required';
-    if (!formData.user_other_loans?.trim()) newErrors.user_other_loans = 'Existing loans information is required';
-    if (!formData.user_intend_to_repay?.trim()) newErrors.user_intend_to_repay = 'Repayment plan is required';
+    if (!formData.user_education_loan_for)
+      newErrors.user_education_loan_for = "Education level is required";
+    if (!formData.user_college_name?.trim())
+      newErrors.user_college_name = "College name is required";
+    if (!formData.user_course_name?.trim())
+      newErrors.user_course_name = "Course name is required";
+    if (!formData.user_course_duration)
+      newErrors.user_course_duration = "Course duration is required";
+    if (!formData.user_course_date)
+      newErrors.user_course_date = "Course start date is required";
+    if (!formData.user_college_address?.trim())
+      newErrors.user_college_address = "College address is required";
+    if (!formData.user_website_number_of_college?.trim())
+      newErrors.user_website_number_of_college =
+        "Website and contact details are required";
+    if (!formData.user_total_fees)
+      newErrors.user_total_fees = "Total fees is required";
+    if (!formData.user_total_loans)
+      newErrors.user_total_loans = "Loan amount required is required";
+    if (!formData.user_other_loans?.trim())
+      newErrors.user_other_loans = "Existing loans information is required";
+    if (!formData.user_intend_to_repay?.trim())
+      newErrors.user_intend_to_repay = "Repayment plan is required";
     if (!formData.user_career_goals?.trim()) {
-      newErrors.user_career_goals = 'Career goals description is required';
+      newErrors.user_career_goals = "Career goals description is required";
     }
 
     // Document Uploads - ALL REQUIRED
-    if (!formData.user_passport_photo) newErrors.user_passport_photo = 'Passport photo is required';
-    if (!formData.user_aadharcard_photo) newErrors.user_aadharcard_photo = 'Aadhar card photo is required';
-    if (!formData.user_school_marksheet_photo) newErrors.user_school_marksheet_photo = 'School marksheet is required';
-    if (!formData.user_college_marksheet_photo) newErrors.user_college_marksheet_photo = 'College marksheet is required';
-    if (!formData.user_college_fee_structure) newErrors.user_college_fee_structure = 'Fee structure document is required';
-    if (!formData.user_college_admission_letter) newErrors.user_college_admission_letter = 'Admission letter is required';
-    if (!formData.user_previous_year_marksheet) newErrors.user_previous_year_marksheet = 'Previous year marksheet is required';
-    if (!formData.user_other_letter) newErrors.user_other_letter = 'Other relevant documents are required';
+    if (!formData.user_passport_photo)
+      newErrors.user_passport_photo = "Passport photo is required";
+    if (!formData.user_aadharcard_photo)
+      newErrors.user_aadharcard_photo = "Aadhar card photo is required";
+    if (!formData.user_school_marksheet_photo)
+      newErrors.user_school_marksheet_photo = "School marksheet is required";
+    if (!formData.user_college_marksheet_photo)
+      newErrors.user_college_marksheet_photo = "College marksheet is required";
+    if (!formData.user_college_fee_structure)
+      newErrors.user_college_fee_structure =
+        "Fee structure document is required";
+    if (!formData.user_college_admission_letter)
+      newErrors.user_college_admission_letter = "Admission letter is required";
+    if (!formData.user_previous_year_marksheet)
+      newErrors.user_previous_year_marksheet =
+        "Previous year marksheet is required";
+    if (!formData.user_other_letter)
+      newErrors.user_other_letter = "Other relevant documents are required";
 
     if (!declarationAccepted) {
-      newErrors.declaration = 'You must accept the declaration';
+      newErrors.declaration = "You must accept the declaration";
     }
 
     return newErrors;
@@ -295,26 +339,32 @@ const LoanForm = () => {
     e.preventDefault();
     const validationErrors = validate();
     setErrors(validationErrors);
-  
+
     if (Object.keys(validationErrors).length > 0) {
       const firstErrorKey = Object.keys(validationErrors)[0];
       const ref = fieldRefs[firstErrorKey];
       if (ref?.current) {
         ref.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'nearest'
+          behavior: "smooth",
+          block: "center",
+          inline: "nearest",
         });
       }
       return;
     }
-  
+
     try {
       const formDataToSubmit = new FormData();
-      
+
       // Append all form data to FormData object
-      Object.keys(formData).forEach(key => {
-        if (key.includes('_photo') || key.includes('user_aadharcard_photo') || key.includes('_structure') || key.includes('_letter') || key.includes('_marksheet')) {
+      Object.keys(formData).forEach((key) => {
+        if (
+          key.includes("_photo") ||
+          key.includes("user_aadharcard_photo") ||
+          key.includes("_structure") ||
+          key.includes("_letter") ||
+          key.includes("_marksheet")
+        ) {
           // For file fields
           if (formData[key]) {
             formDataToSubmit.append(key, formData[key]);
@@ -324,83 +374,93 @@ const LoanForm = () => {
           formDataToSubmit.append(key, formData[key]);
         }
       });
-  
+
       const response = await submitTrigger({
         url: CREATE_LOAN_API,
-        method: 'post',
+        method: "post",
         data: formDataToSubmit,
         headers: {
-          'Content-Type': 'multipart/form-data',
-        }
+          "Content-Type": "multipart/form-data",
+        },
       });
-  
+
       if (response?.code === 201) {
-        showSuccessToast(response.message || 'Loan application submitted successfully!');
-        
+        showSuccessToast(
+          response.message || "Loan application submitted successfully!",
+        );
+
         // Reset form - FIXED: Include loans_type with default value
         setFormData({
-          branch_id: '',
-          loans_type: 'Education Loan', // Add this default value
-          user_full_name: '',
-          user_email: '',
-          user_dob: '',
-          user_gender: '',
-          user_residentaial_address: '',
-          user_city: '',
-          user_pincode: '',
-          user_mobile_number: '',
-          user_aadhar_number: '',
-          user_parents_name: '',
-          user_parents_occupation: '',
-          user_annual_income: '',
-          user_no_dependents: '',
-          user_college_degree: '',
-          user_qualification: '',
-          user_degree_percentage: '',
-          user_school_percentage: '',
-          user_college_percentage: '',
-          user_entrance_exam: '',
-          user_entrance_exam_score: '',
-          user_education_loan_for: '',
-          user_college_name: '',
-          user_course_name: '',
-          user_course_duration: '',
-          user_course_date: '',
-          user_college_address: '',
-          user_website_number_of_college: '',
-          user_total_fees: '',
-          user_total_loans: '',
-          user_other_loans: '',
-          user_intend_to_repay: '',
-          user_career_goals: '',
-          user_passport_photo: '',
-          user_aadharcard_photo: '',
-          user_school_marksheet_photo: '',
-          user_college_marksheet_photo: '',
-          user_college_fee_structure: '',
-          user_college_admission_letter: '',
-          user_other_letter: '',
-          user_previous_year_marksheet: '',
-          loan_required_copy: 'No'
+          branch_id: "",
+          loans_type: "Education Loan", // Add this default value
+          user_full_name: "",
+          user_email: "",
+          user_dob: "",
+          user_gender: "",
+          user_residentaial_address: "",
+          user_city: "",
+          user_pincode: "",
+          user_mobile_number: "",
+          user_aadhar_number: "",
+          user_parents_name: "",
+          user_parents_occupation: "",
+          user_annual_income: "",
+          user_no_dependents: "",
+          user_college_degree: "",
+          user_qualification: "",
+          user_degree_percentage: "",
+          user_school_percentage: "",
+          user_college_percentage: "",
+          user_entrance_exam: "",
+          user_entrance_exam_score: "",
+          user_education_loan_for: "",
+          user_college_name: "",
+          user_course_name: "",
+          user_course_duration: "",
+          user_course_date: "",
+          user_college_address: "",
+          user_website_number_of_college: "",
+          user_total_fees: "",
+          user_total_loans: "",
+          user_other_loans: "",
+          user_intend_to_repay: "",
+          user_career_goals: "",
+          user_passport_photo: "",
+          user_aadharcard_photo: "",
+          user_school_marksheet_photo: "",
+          user_college_marksheet_photo: "",
+          user_college_fee_structure: "",
+          user_college_admission_letter: "",
+          user_other_letter: "",
+          user_previous_year_marksheet: "",
+          loan_required_copy: "No",
         });
         setDeclarationAccepted(false);
-        
+
         // Also reset file inputs
-        Object.keys(fieldRefs).forEach(key => {
-          if (fieldRefs[key]?.current && fieldRefs[key].current.type === 'file') {
-            fieldRefs[key].current.value = '';
+        Object.keys(fieldRefs).forEach((key) => {
+          if (
+            fieldRefs[key]?.current &&
+            fieldRefs[key].current.type === "file"
+          ) {
+            fieldRefs[key].current.value = "";
           }
         });
       } else {
-        showErrorToast(response.message || 'Something went wrong');
+        showErrorToast(response.message || "Something went wrong");
       }
     } catch (error) {
-      showErrorToast(error?.response?.data?.message || 'Failed to submit loan application');
+      showErrorToast(
+        error?.response?.data?.message || "Failed to submit loan application",
+      );
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-6xl mx-auto bg-white my-2 px-4 sm:px-6">
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-6xl mx-auto bg-white my-2 px-4 sm:px-6"
+    >
       {/* Header Section */}
       <div className="text-center mb-8">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
@@ -408,11 +468,13 @@ const LoanForm = () => {
         </h1>
         <div className="text-xs sm:text-sm text-gray-600 space-y-2">
           <p>
-            This form is for requesting Education loan from Sri DBKDO Jain Ekkam for the purpose of pursuing Graduation, 
-            Post Graduation or Diploma in specific specialised field.
+            This form is for requesting Education loan from Sri DBKDO Jain Ekkam
+            for the purpose of pursuing Graduation, Post Graduation or Diploma
+            in specific specialised field.
           </p>
           <p className="font-semibold text-red-600">
-            ALL FIELDS ARE MANDATORY. Please fill all fields and attach all required documents. Incomplete form will not be considered.
+            ALL FIELDS ARE MANDATORY. Please fill all fields and attach all
+            required documents. Incomplete form will not be considered.
           </p>
         </div>
       </div>
@@ -429,7 +491,7 @@ const LoanForm = () => {
             options={
               branchdata?.data?.map((branch) => ({
                 value: String(branch.id),
-                label: branch.branch_name
+                label: branch.branch_name,
               })) || []
             }
             error={errors.branch_id}
@@ -440,7 +502,9 @@ const LoanForm = () => {
 
         {/* Personal Information Section */}
         <div className="md:col-span-2 lg:col-span-4">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Personal Information</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">
+            Personal Information
+          </h2>
         </div>
 
         <div className="md:col-span-2 lg:col-span-2">
@@ -575,7 +639,9 @@ const LoanForm = () => {
 
         {/* Family Information Section */}
         <div className="md:col-span-2 lg:col-span-4 mt-4">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Family Information</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">
+            Family Information
+          </h2>
         </div>
 
         <div className="md:col-span-2 lg:col-span-2">
@@ -638,7 +704,9 @@ const LoanForm = () => {
 
         {/* Educational Background Section */}
         <div className="md:col-span-2 lg:col-span-4 mt-4">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Educational Background</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">
+            Educational Background
+          </h2>
         </div>
 
         <div className="md:col-span-2 lg:col-span-2">
@@ -745,7 +813,9 @@ const LoanForm = () => {
 
         {/* Course Information Section */}
         <div className="md:col-span-2 lg:col-span-4 mt-4">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Course & Institution Details</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">
+            Course & Institution Details
+          </h2>
         </div>
 
         <div className="md:col-span-2 lg:col-span-2">
@@ -880,7 +950,9 @@ const LoanForm = () => {
 
         {/* Financial Information Section */}
         <div className="md:col-span-2 lg:col-span-4 mt-4">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Financial Information</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">
+            Financial Information
+          </h2>
         </div>
 
         <div className="md:col-span-2 lg:col-span-2">
@@ -932,7 +1004,9 @@ const LoanForm = () => {
 
         {/* Document Upload Section */}
         <div className="md:col-span-2 lg:col-span-4 mt-4">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Required Documents - ALL DOCUMENTS ARE MANDATORY</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">
+            Required Documents - ALL DOCUMENTS ARE MANDATORY
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <InputField
               ref={fieldRefs.user_passport_photo}
@@ -1043,7 +1117,10 @@ const LoanForm = () => {
                 className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
               <label htmlFor="declaration" className="text-sm text-gray-700">
-                I hereby declare that the information provided in this application is true, complete, and correct to the best of my knowledge and belief. I understand that if any information is found to be false, my application will be rejected.
+                I hereby declare that the information provided in this
+                application is true, complete, and correct to the best of my
+                knowledge and belief. I understand that if any information is
+                found to be false, my application will be rejected.
               </label>
             </div>
             {errors.declaration && (
@@ -1057,12 +1134,19 @@ const LoanForm = () => {
       <button
         type="submit"
         disabled={submitLoading}
-        className={`w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition flex items-center justify-center gap-2 ${
-          submitLoading ? 'cursor-not-allowed opacity-70' : ''
+        className={`w-full mt-8 text-white font-medium py-3 px-4 rounded-lg transition flex items-center justify-center gap-2 ${
+          submitLoading ? "cursor-not-allowed opacity-70" : ""
         }`}
+        style={{ background: "#db2920" }}
+        onMouseEnter={(e) => {
+          if (!submitLoading) e.currentTarget.style.background = "#9b1c15";
+        }}
+        onMouseLeave={(e) => {
+          if (!submitLoading) e.currentTarget.style.background = "#db2920";
+        }}
       >
         {submitLoading && <Loader className="w-5 h-5 animate-spin" />}
-        {submitLoading ? 'Submitting...' : 'Submit Loan Application'}
+        {submitLoading ? "Submitting..." : "Submit Loan Application"}
       </button>
     </form>
   );

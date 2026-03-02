@@ -386,12 +386,29 @@ const CommunityForm = () => {
         </div>
       </div>
 
-      <button
+      {/* <button
         type="submit"
         disabled={submitLoading}
         className={`w-full mt-3 bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-lg transition flex items-center justify-center gap-2 ${
           submitLoading ? "cursor-not-allowed opacity-70" : ""
         }`}
+      >
+        {submitLoading && <Loader className="w-5 h-5 animate-spin" />}
+        {submitLoading ? "Submitting..." : "Register"}
+      </button> */}
+      <button
+        type="submit"
+        disabled={submitLoading}
+        className={`w-full mt-3 text-white font-medium py-2 px-4 rounded-lg transition flex items-center justify-center gap-2 ${
+          submitLoading ? "cursor-not-allowed opacity-70" : ""
+        }`}
+        style={{ background: "#db2920" }}
+        onMouseEnter={(e) => {
+          if (!submitLoading) e.currentTarget.style.background = "#9b1c15";
+        }}
+        onMouseLeave={(e) => {
+          if (!submitLoading) e.currentTarget.style.background = "#db2920";
+        }}
       >
         {submitLoading && <Loader className="w-5 h-5 animate-spin" />}
         {submitLoading ? "Submitting..." : "Register"}

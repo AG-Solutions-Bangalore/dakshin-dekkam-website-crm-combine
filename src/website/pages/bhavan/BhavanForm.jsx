@@ -579,12 +579,29 @@ const BhavanForm = () => {
             })}
           </div> */}
 
-          <button
+          {/* <button
             type="submit"
             disabled={submitLoading}
             className={`bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-8 rounded-lg transition flex items-center justify-center gap-2 min-w-[200px] ${
               submitLoading ? "cursor-not-allowed opacity-70" : ""
             }`}
+          >
+            {submitLoading && <Loader className="w-5 h-5 animate-spin" />}
+            {submitLoading ? "Submitting..." : "Submit Banquet Order"}
+          </button> */}
+          <button
+            type="submit"
+            disabled={submitLoading}
+            className={`text-white font-medium py-3 px-8 rounded-lg transition flex items-center justify-center gap-2 min-w-[200px] ${
+              submitLoading ? "cursor-not-allowed opacity-70" : ""
+            }`}
+            style={{ background: "#db2920" }}
+            onMouseEnter={(e) => {
+              if (!submitLoading) e.currentTarget.style.background = "#9b1c15";
+            }}
+            onMouseLeave={(e) => {
+              if (!submitLoading) e.currentTarget.style.background = "#db2920";
+            }}
           >
             {submitLoading && <Loader className="w-5 h-5 animate-spin" />}
             {submitLoading ? "Submitting..." : "Submit Banquet Order"}

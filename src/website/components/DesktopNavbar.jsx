@@ -15,7 +15,7 @@ const DesktopNavbar = ({ menuItems }) => {
             data-aos="fade-up"
             data-aos-delay={idx * 50}
             className={`px-3 py-2 text-sm font-medium  ${
-              isActive ? "text-orange-400" : ""
+              isActive ? "text-[#db2920]" : ""
             }`}
           >
             {item.label}
