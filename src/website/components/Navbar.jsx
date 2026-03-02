@@ -95,7 +95,7 @@ function Navbar() {
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 py-3 ${
           showNavbar
             ? isScrolled
-              ? "bg-yellow-100 shadow-md !text-black"
+              ? "bg-[#fdf0ef] shadow-md !text-black"
               : "bg-transparent"
             : "-translate-y-full"
         } ${isHome ? "text-white" : "text-black"}`}
