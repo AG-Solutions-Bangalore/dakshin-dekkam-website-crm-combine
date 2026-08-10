@@ -4,7 +4,7 @@ import PageMeta from "../../components/common/PageMeta";
 const WebsiteNotFound = () => {
   return (
     <>
-      <PageMeta title="404 Not Found | Dhakshin Ekkam" />
+      <PageMeta title="404 Not Found | Dakshin Ekkam" />
 
       <section className="bg-white mb-10 p-2 mt-16">
         <div className="container mx-auto">

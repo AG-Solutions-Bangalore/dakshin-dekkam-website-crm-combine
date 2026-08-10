@@ -89,6 +89,8 @@ const InputField = forwardRef(
       rows = 4,
       required,
       maxLength,
+      accept,
+      className,
     },
     ref,
   ) => {
@@ -129,6 +131,16 @@ const InputField = forwardRef(
               maxLength={maxLength}
               className="w-full resize-none outline-none bg-transparent text-gray-700 placeholder-gray-400"
             />
+          ) : type === "file" ? (
+            <input
+              ref={ref}
+              id={name}
+              name={name}
+              type="file"
+              onChange={onChange}
+              accept={accept}
+              className={`w-full outline-none bg-transparent text-gray-700 placeholder-gray-400 ${className || ""}`}
+            />
           ) : (
             <input
               ref={ref}
@@ -139,7 +151,7 @@ const InputField = forwardRef(
               onChange={onChange}
               placeholder={placeholder}
               maxLength={maxLength}
-              className="w-full outline-none bg-transparent text-gray-700 placeholder-gray-400"
+              className={`w-full outline-none bg-transparent text-gray-700 placeholder-gray-400 ${className || ""}`}
             />
           )}
         </div>

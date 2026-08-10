@@ -15,7 +15,7 @@ const Contact = () => {
 
   return (
     <>
-      <PageMeta title="Contact | Dhakshin Ekkam" />
+      <PageMeta title="Contact | Dakshin Ekkam" />
       <HeroSub
         title="Contact"
         breadcrumbLinks={breadcrumbLinks}

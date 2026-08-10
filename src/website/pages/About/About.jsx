@@ -12,7 +12,7 @@ const About = () => {
   ];
   return (
     <>
-      <PageMeta title="About Us | Dhakshin Ekkam" />
+      <PageMeta title="About Us | Dakshin Ekkam" />
       <HeroSub
         title="About Us"
         breadcrumbLinks={breadcrumbLinks}

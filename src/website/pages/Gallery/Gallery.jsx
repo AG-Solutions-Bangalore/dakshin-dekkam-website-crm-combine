@@ -9,7 +9,7 @@ const Gallery = () => {
   ];
   return (
     <>
-      <PageMeta title="Gallery | Dhakshin Ekkam" />
+      <PageMeta title="Gallery | Dakshin Ekkam" />
       <HeroSub
         title="Gallery"
         breadcrumbLinks={breadcrumbLinks}

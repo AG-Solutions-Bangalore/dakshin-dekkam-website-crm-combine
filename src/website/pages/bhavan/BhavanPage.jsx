@@ -202,11 +202,10 @@ export default function BhavanWebsite() {
                 </h1>
 
                 <div
-                  className={`text-sm text-gray-700 text-justify transition-all duration-500 ${
-                    showMore
-                      ? "max-h-[2000px]"
-                      : "max-h-[380px] overflow-hidden"
-                  }`}
+                  className={`text-sm text-gray-700 text-justify transition-all duration-500 ${showMore
+                    ? "max-h-[2000px]"
+                    : "max-h-[380px] overflow-hidden"
+                    }`}
                 >
                   <p className="mb-4">
                     Kutchi Bhavan, JP Nagar, Bangalore, is an idyllic venue
@@ -225,7 +224,7 @@ export default function BhavanWebsite() {
                   </p>
 
                   <p className="mb-4">
-                    Conveniently located just off 1st Main Road and only 5min
+                    Conveniently located on 1st Main Road and only 5min
                     walk from the Jaydeva Metro Station, Kutchi Bhavan is easily
                     accessible for guests. The professional and attentive staff
                     ensures every detail is taken care of, allowing you to
@@ -268,6 +267,22 @@ export default function BhavanWebsite() {
                   {showMore ? "Show Less" : "Show More"}
                 </button>
               </div>
+            </div>
+          </div>
+          <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div className="flex items-center justify-center rounded-xl border border-red-200 bg-red-50 px-6 py-4 text-center shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1">
+              <span className="text-sm font-medium text-red-800">
+                🎉 <strong>Exclusive Member Benefit:</strong> Members can avail of Bhavan
+                facilities at special subsidized rates.
+              </span>
+            </div>
+
+            <div className="flex items-center justify-center rounded-xl border border-red-200 bg-red-50 px-6 py-4 text-center shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1">
+              <span className="text-sm font-medium text-red-800">
+                🙏 <strong>Community Support:</strong> The Bhavan premises are provided
+                free of charge for third-day prayer ceremonies, subject to terms and
+                conditions.
+              </span>
             </div>
           </div>
         </div>

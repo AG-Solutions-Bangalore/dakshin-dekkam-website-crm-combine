@@ -48,7 +48,7 @@ const HeroMain = () => {
               alt={`Slide ${idx + 1}`}
               className="w-full h-auto object-contain"
             />
-            <div className="absolute inset-0 bg-black/30" />
+            {/* <div className="absolute inset-0 bg-black/30" /> */}
           </div>
         ))}
       </Slider>

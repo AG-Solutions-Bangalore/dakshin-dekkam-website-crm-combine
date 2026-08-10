@@ -48,6 +48,7 @@ const CommunityForm = () => {
     user_education: "",
     resi_address: "",
     place_of_residence: "",
+    user_image: "",
     native_place: "",
     user_doa: "",
     user_married_status: "",
@@ -57,6 +58,7 @@ const CommunityForm = () => {
   });
   const { trigger: submitTrigger, loading: submitLoading } = useApiMutation();
   const yearOptions = generateYearOptions(1950);
+  const fileInputRef = useRef(null);
 
   const [errors, setErrors] = useState({});
   const { data: blodGroupdata } = useFetchBloodGroup();
@@ -79,7 +81,14 @@ const CommunityForm = () => {
     native_place: useRef(null),
   };
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+
+    if (type === "file") {
+      const file = e.target.files?.[0] || null;
+      setFormData({ ...formData, [name]: file });
+      setErrors({ ...errors, [name]: "" });
+      return;
+    }
 
     if (
       name == "mobile" ||
@@ -161,10 +170,18 @@ const CommunityForm = () => {
     }
 
     try {
+      const payload = new FormData();
+
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value === null || value === undefined || value === "") return;
+        payload.append(key, value instanceof File ? value : String(value));
+      });
+
       const response = await submitTrigger({
         url: CREATE_MEMBER,
         method: "post",
-        data: formData,
+        data: payload,
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (response?.code === 201) {
@@ -185,6 +202,7 @@ const CommunityForm = () => {
           user_education: "",
           resi_address: "",
           place_of_residence: "",
+          user_image: null,
           native_place: "",
           user_doa: "",
           user_married_status: "",
@@ -192,6 +210,9 @@ const CommunityForm = () => {
           user_state: "",
           user_pincode: "",
         });
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       } else {
         showErrorToast(response.message || "Something went wrong");
       }
@@ -484,7 +505,7 @@ const CommunityForm = () => {
           placeholder="Enter MID"
           startIcon={<Group size={18} />}
         /> */}
-        <div className="md:col-span-3">
+        <div className="md:col-span-3 flex gap-20">
           <InputField
             label="Residential Address"
             name="resi_address"
@@ -496,7 +517,20 @@ const CommunityForm = () => {
             // required
             // ref={fieldRefs.resi_address}
           />
+        <InputField
+          ref={fileInputRef}
+          label="Photo"
+          type="file"
+          name="user_image"
+          value={formData.user_image}
+          onChange={handleChange}
+          startIcon={<User size={18} />}
+          accept="image/*"
+          className="w-2"
+        />
         </div>
+        
+
       </div>
 
       {/* <button
