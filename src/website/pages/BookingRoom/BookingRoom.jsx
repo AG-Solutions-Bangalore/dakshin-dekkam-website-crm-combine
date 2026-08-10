@@ -10,7 +10,7 @@ const BookingRoom = () => {
   ];
   return (
     <>
-      <PageMeta title="Room Booking | Dhakshin Ekkam" />
+      <PageMeta title="Room Booking | Dakshin Ekkam" />
       <HeroSub title="Room Booking" breadcrumbLinks={breadcrumbLinks} />
       <BookingRoomForm />
     </>

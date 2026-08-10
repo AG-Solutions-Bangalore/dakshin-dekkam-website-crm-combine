@@ -10,7 +10,7 @@ const BhavanIndex = () => {
   ];
   return (
     <>
-      <PageMeta title="Hall Booking Form | Dhakshin Ekkam" />
+      <PageMeta title="Hall Booking Form | Dakshin Ekkam" />
       <HeroSub title="Hall Booking Form" breadcrumbLinks={breadcrumbLinks} />
       <BhavanForm />
     </>

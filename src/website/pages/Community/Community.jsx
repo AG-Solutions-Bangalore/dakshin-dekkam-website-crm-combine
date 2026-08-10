@@ -11,7 +11,7 @@ const Community = () => {
   ];
   return (
     <>
-      <PageMeta title="Community | Dhakshin Ekkam" />
+      <PageMeta title="Community | Dakshin Ekkam" />
       <HeroSub title="Community" breadcrumbLinks={breadcrumbLinks} />
       <OurObjectives />
       <ChairPersonCarousel />

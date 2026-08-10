@@ -53,12 +53,12 @@ function Navbar() {
       icon: <User className="h-5 w-5" />,
       onClick: () => setOpen(false),
     },
-    {
-      label: "Gallery",
-      path: "/gallery",
-      icon: <Image className="h-5 w-5" />,
-      onClick: () => setOpen(false),
-    },
+    // {
+    //   label: "Gallery",
+    //   path: "/gallery",
+    //   icon: <Image className="h-5 w-5" />,
+    //   onClick: () => setOpen(false),
+    // },
     {
       label: "Contact",
       path: "/contact",
@@ -100,17 +100,17 @@ function Navbar() {
             : "-translate-y-full"
         } ${isHome ? "text-white" : "text-black"}`}
       >
-        <div className="max-w-screen-xl mx-auto px-6 md:px-8 flex items-center justify-between">
+        <div className="max-w-full mx-auto px-4 md:px-5 flex items-center justify-around">
           <div className="relative">
             <Link
               to="/"
-              className="text-lg relative z-50 flex flex-row items-center gap-2 font-bold tracking-widest rounded-lg focus:outline-none focus:shadow-outline"
+              className="text-xl relative z-40 flex flex-row items-center gap-4 font-bold tracking-widest rounded-lg focus:outline-none focus:shadow-outline"
             >
               <img src="./logo.png" alt="app_logo" className="w-10  h-10" />
-              <span> Dhakshin Ekkam</span>
+              <span>Dakshin Bharat Kutchi Dasha Oswal Jain Ekkam</span>
             </Link>
           </div>
-          <DesktopNavbar menuItems={menuItems} />
+             <DesktopNavbar menuItems={menuItems} />
         </div>
       </div>
 

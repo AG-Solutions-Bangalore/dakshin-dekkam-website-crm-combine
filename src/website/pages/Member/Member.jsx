@@ -10,7 +10,7 @@ const Member = () => {
   ];
   return (
     <>
-      <PageMeta title="Member | Dhakshin Ekkam" />
+      <PageMeta title="Member | Dakshin Ekkam" />
       <HeroSub
         title="Member"
         breadcrumbLinks={breadcrumbLinks}

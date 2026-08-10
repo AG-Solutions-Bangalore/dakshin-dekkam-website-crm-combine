@@ -94,7 +94,7 @@ function OurObjectives() {
           Our <span style={{ color: "#db2920" }}>Objectives</span>
         </h1>
         <p className="leading-relaxed text-gray-500">
-          We aim to empower our community by providing connection, support, and
+          We aim to empower the community by providing connection, support, and
           opportunities for growth through meaningful engagement.
         </p>
       </div>

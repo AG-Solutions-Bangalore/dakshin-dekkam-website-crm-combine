@@ -206,7 +206,7 @@ function Footer() {
             className="text-lg relative z-50 flex flex-row items-center gap-2 font-bold tracking-widest rounded-lg focus:outline-none focus:shadow-outline"
           >
             <img src="./logo.png" alt="app_logo" className="w-10  h-10" />
-            <span> Dhakshin Ekkam</span>
+            <span> Dakshin Bharat Kutchi Dasha Oswal Jain Ekkam</span>
           </Link>
           <p className="text-gray-400 mt-3 text-sm leading-relaxed">
             {websitecompany?.store_description || ""}
@@ -244,14 +244,14 @@ function Footer() {
                 About Us
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link
                 to="/gallery"
                 className="hover:text-yellow-500 transition-colors"
               >
                 Gallery
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link
                 to="/community"

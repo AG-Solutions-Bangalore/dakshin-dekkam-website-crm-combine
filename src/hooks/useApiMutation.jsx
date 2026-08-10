@@ -17,15 +17,18 @@ export function useApiMutation() {
     setLoading(true);
     setError(null);
     try {
+      const requestHeaders = {
+        ...headers,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(data instanceof FormData ? { "Content-Type": undefined } : {}),
+      };
+
       const response = await axiosInstance({
         url,
         method,
         data,
         params,
-        headers: {
-          ...headers,
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
+        headers: requestHeaders,
       });
 
       return response.data;

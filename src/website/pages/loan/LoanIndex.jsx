@@ -14,7 +14,7 @@ const LoanIndex = () => {
   ];
   return (
  <>
-      <PageMeta title="Loan | Dhakshin Ekkam" />
+      <PageMeta title="Loan | Dakshin Ekkam" />
       <HeroSub
         title="Loan"
         breadcrumbLinks={breadcrumbLinks}
