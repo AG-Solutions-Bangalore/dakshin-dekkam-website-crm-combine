@@ -119,7 +119,7 @@ body {
 }
 .floating {
   animation-name: floating;
-  animation-duration: 3s;
+  animation-duration: 25s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
 }
@@ -136,7 +136,7 @@ body {
 }
 .floating-4 {
   animation-name: floating;
-  animation-duration: 4s;
+  animation-duration: 25s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
 }

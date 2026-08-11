@@ -157,7 +157,7 @@
 // export default MemberForm;
 import { PANEL_LOGIN } from "@/api";
 import { useApiMutation } from "@/hooks/useApiMutation";
-import { Loader, Lock, Phone } from "lucide-react";
+import { Loader, Lock, Phone, User } from "lucide-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -240,6 +240,30 @@ const MemberForm = () => {
   };
 
   return (
+    <>
+    <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-6 mb-6">
+  <div className="flex items-center gap-3 mb-3">
+    <div className="h-12 w-12 rounded-full bg-red-100 flex items-center justify-center">
+      <User className="h-6 w-6 text-red-600" />
+    </div>
+
+    <div>
+      <h3 className="text-xl font-bold text-gray-800">
+        Already a member?
+      </h3>
+      <p className="text-sm text-gray-500">
+        Fill your latest information.
+      </p>
+    </div>
+  </div>
+
+  <Link
+    to="/signup"
+    className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-[#db2920] px-5 py-3 font-semibold text-white transition hover:bg-[#b52019]"
+  >
+    Update Member Details
+  </Link>
+</div>
     <div className="max-w-md mx-auto my-6 rounded-xl md:px-6">
       <form onSubmit={handleSubmit}>
         <h2 className="text-xl font-semibold mb-4 text-gray-800">
@@ -303,6 +327,7 @@ const MemberForm = () => {
         </Link>
       </div>
     </div>
+    </>
   );
 };
 

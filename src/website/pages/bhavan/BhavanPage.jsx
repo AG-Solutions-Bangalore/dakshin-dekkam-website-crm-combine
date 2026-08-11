@@ -272,17 +272,14 @@ export default function BhavanWebsite() {
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-5">
             <div className="flex items-center justify-center rounded-xl border border-red-200 bg-red-50 px-6 py-4 text-center shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1">
               <span className="text-sm font-medium text-red-800">
-                🎉 <strong>Exclusive Member Benefit:</strong> Members can avail of Bhavan
-                facilities at special subsidized rates.
+                🎉 <strong> A Special Privilege for Members:</strong>Members can make use of Bhavan facilities at preferential subsidized rates offered exclusively to them.
               </span>
             </div>
 
             <div className="flex items-center justify-center rounded-xl border border-red-200 bg-red-50 px-6 py-4 text-center shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1">
               <span className="text-sm font-medium text-red-800">
-                🙏 <strong>Community Support:</strong> The Bhavan premises are provided
-                free of charge for third-day prayer ceremonies, subject to terms and
-                conditions.
-              </span>
+                🙏 <strong>Community Support:</strong> Bhavan is pleased to extend complimentary use of its premises 
+                for third-day prayer ceremonies, (T&C applicable).</span>
             </div>
           </div>
         </div>

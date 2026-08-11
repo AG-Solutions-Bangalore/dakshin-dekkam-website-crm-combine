@@ -106,8 +106,8 @@ function Navbar() {
               to="/"
               className="text-xl relative z-40 flex flex-row items-center gap-4 font-bold tracking-widest rounded-lg focus:outline-none focus:shadow-outline"
             >
-              <img src="./logo.png" alt="app_logo" className="w-10  h-10" />
-              <span>Dakshin Bharat Kutchi Dasha Oswal Jain Ekkam</span>
+              <img src="./logo.png" alt="app_logo" className="w-10 h-10" />
+              <span className="font-bold text-sm sm:text-lg md:text-xl leading-tight sm:leading-normal">Dakshin Bharat Kutchi Dasha Oswal Jain Ekkam</span>
             </Link>
           </div>
              <DesktopNavbar menuItems={menuItems} />

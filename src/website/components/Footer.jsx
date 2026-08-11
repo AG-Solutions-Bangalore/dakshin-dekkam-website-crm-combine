@@ -211,7 +211,7 @@ function Footer() {
           <p className="text-gray-400 mt-3 text-sm leading-relaxed">
             {websitecompany?.store_description || ""}
           </p>
-          <div className="flex space-x-3 mt-4">
+          {/* <div className="flex space-x-3 mt-4">
             <Link to="#" className="hover:text-yellow-500 transition-colors">
               <Facebook size={18} />
             </Link>
@@ -224,7 +224,7 @@ function Footer() {
             <Link to="#" className="hover:text-yellow-500 transition-colors">
               <Linkedin size={18} />
             </Link>
-          </div>
+          </div> */}
         </div>
 
         {/* Column 2: Quick Links */}
