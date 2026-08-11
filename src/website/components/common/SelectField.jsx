@@ -163,7 +163,7 @@
 // };
 
 // export default CustomSelect;
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 
 const Chevron = ({ className = "" }) => (
   <svg
@@ -182,7 +182,7 @@ const Chevron = ({ className = "" }) => (
   </svg>
 );
 
-const CustomSelect = ({
+const CustomSelect = forwardRef(({
   label,
   name,
   value,
@@ -192,7 +192,7 @@ const CustomSelect = ({
   placeholder,
   required,
   startIcon,
-}) => {
+}, ref) => {
   const [open, setOpen] = useState(false);
   const [highlighted, setHighlighted] = useState(-1);
   const containerRef = useRef(null);
@@ -261,6 +261,7 @@ const CustomSelect = ({
         )}
 
         <button
+          ref={ref}
           type="button"
           aria-haspopup="listbox"
           aria-expanded={open}
@@ -336,6 +337,6 @@ const CustomSelect = ({
       {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
     </div>
   );
-};
+});
 
 export default CustomSelect;
