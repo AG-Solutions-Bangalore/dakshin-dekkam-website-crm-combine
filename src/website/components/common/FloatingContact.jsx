@@ -52,12 +52,12 @@ export default function FloatingContact() {
           <span className="font-semibold text-sm">Contact</span>
         </div>
       </button> */}
-      <div className="fixed right-0 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-50">
-        {/* Hall Booking */}
+      <div className="fixed right-0 top-1/2 -translate-y-1/2 flex flex-col items-end gap-2 z-50">
+        {/* Hall Availability */}
         <button
           onClick={() => navigate("/booking-hall")}
-          className="text-white px-4 py-3 rounded-l-xl shadow-lg transition-all duration-300 flex items-center gap-2  group w-[150px]"
-          style={{ background: "linear-gradient(135deg, #1e40af, #1e3a8a)" }} 
+          className="text-white px-5 py-3 rounded-l-xl shadow-lg transition-all duration-300 flex items-center gap-2 hover:pr-6 group"
+          style={{ background: "linear-gradient(135deg, #1e40af, #1e3a8a)" }}
         >
           <svg
             className="w-4 h-4 group-hover:rotate-12 transition-transform"
@@ -72,15 +72,15 @@ export default function FloatingContact() {
               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
             />
           </svg>
-          <span className="text-sm font-semibold tracking-wide">
-            Hall Booking
+          <span className="text-sm font-semibold tracking-wider whitespace-nowrap">
+            Check Hall Availability
           </span>
         </button>
 
         {/* Contact */}
         <button
           onClick={() => setOpen(true)}
-          className="text-white px-4 py-3 rounded-l-xl shadow-lg transition-all duration-300 flex items-center gap-2 hover:pr-5 group w-[150px]"
+          className="text-white px-6 py-3 rounded-l-xl shadow-lg transition-all duration-300 flex items-center gap-2.5 hover:pr-7 group min-w-[145px]"
           style={{ background: "linear-gradient(135deg, #db2920, #9b1c15)" }}
         >
           <svg
@@ -96,7 +96,9 @@ export default function FloatingContact() {
               d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
             />
           </svg>
-          <span className="text-sm font-semibold">Contact</span>
+          <span className="text-sm font-semibold tracking-widest uppercase whitespace-nowrap text-xs">
+            Contact
+          </span>
         </button>
       </div>
       {/* Overlay */}
@@ -370,7 +372,7 @@ export default function FloatingContact() {
                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <span>Hall Booking</span>
+            <span>Check Hall Availability</span>
             <svg
               className="w-4 h-4 group-hover:translate-x-2 transition-transform"
               fill="none"

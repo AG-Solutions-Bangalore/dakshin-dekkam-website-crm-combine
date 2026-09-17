@@ -83,6 +83,7 @@ const BhavanForm = () => {
 
   const fieldRefs = {
     guest_name: useRef(null),
+    guest_address: useRef(null),
     guest_mobile_number: useRef(null),
     guest_email: useRef(null),
     function_type: useRef(null),
@@ -192,7 +193,7 @@ const BhavanForm = () => {
 
       if (response?.code === 201) {
         showSuccessToast(
-          response.message || "Banquet order submitted successfully!",
+          response.message || "Hall availability enquiry submitted successfully!",
         );
 
         // Reset form
@@ -218,7 +219,7 @@ const BhavanForm = () => {
       }
     } catch (error) {
       showErrorToast(
-        error?.response?.data?.message || "Failed to submit banquet order",
+        error?.response?.data?.message || "Failed to submit hall availability enquiry",
       );
     }
   };
@@ -370,7 +371,7 @@ const BhavanForm = () => {
           {/* Contact Mobile */}
           <InputField
             ref={fieldRefs.guest_mobile_number}
-            label="Contact Mob No"
+            label="Contact Mobile No"
             name="guest_mobile_number"
             value={formData.guest_mobile_number}
             onChange={handleChange}
@@ -393,12 +394,12 @@ const BhavanForm = () => {
           {/* Email */}
           <InputField
             ref={fieldRefs.guest_email}
-            label="Email"
+            label="Email Address"
             type="email"
             name="guest_email"
             value={formData.guest_email}
             onChange={handleChange}
-            placeholder="Enter email"
+            placeholder="Enter email address"
             startIcon={<Mail size={18} />}
             error={errors.guest_email}
             required
@@ -406,18 +407,18 @@ const BhavanForm = () => {
 
           <InputField
             ref={fieldRefs.function_type}
-            label="Type of Function"
+            label="Type of Function / Event"
             name="function_type"
             value={formData.function_type}
             onChange={handleChange}
-            placeholder="Enter function type"
+            placeholder="Enter function / event type"
             startIcon={<Calendar size={18} />}
             error={errors.function_type}
             required
           />
 
           <InputField
-            label="No. of Days"
+            label="No. of Days Required"
             name="guest_no_days"
             value={formData.guest_no_days}
             onChange={handleChange}
@@ -476,45 +477,42 @@ const BhavanForm = () => {
 
           <InputField
             ref={fieldRefs.no_of_guest}
-            label="No. of Guests expected"
+            label="Expected No. of Guests"
             name="no_of_guest"
             value={formData.no_of_guest}
             onChange={handleChange}
-            placeholder="Enter number of guests"
+            placeholder="Enter expected number of guests"
             startIcon={<User size={18} />}
             error={errors.no_of_guest}
             required
           />
         </div>
 
-        <div className="flex flex-col">
+        <div>
           <InputField
-            label=" Address "
+            ref={fieldRefs.guest_address}
+            label="Address"
             name="guest_address"
             value={formData.guest_address}
             onChange={handleChange}
-            rows="2"
+            rows={2}
             required
             type="textarea"
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            error={errors.guest_address}
             placeholder="Enter complete address"
           />
-          {errors.guest_address && (
-            <span className="text-red-500 text-sm flex items-center gap-1">
-              {errors.guest_address}
-            </span>
-          )}
         </div>
 
         <div className="mt-4">
           <div className="md:col-span-2 lg:col-span-3">
             <InputField
-              label="Special Instructions"
+              label="Special Requirements / Requests"
               name="special_instructions"
               type="textarea"
+              rows={3}
               value={formData.special_instructions}
               onChange={handleChange}
-              placeholder="Enter any special instructions or requests"
+              placeholder="Enter any special requirements or requests"
               startIcon={<MessageCircle size={18} />}
             />
           </div>
@@ -555,39 +553,6 @@ const BhavanForm = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-end items-center mt-8 pt-6 border-t border-gray-200">
-          {/* <div className="flex gap-2">
-            {sectionButtons.map((section, index) => {
-              const hasError = hasErrorsInSection(section.id);
-              return (
-                <button
-                  key={section.id}
-                  type="button"
-                  onClick={() => setActiveSection(section.id)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition relative ${
-                    activeSection === section.id
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                  }`}
-                >
-                  {index + 1}
-                  {hasError && (
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></div>
-                  )}
-                </button>
-              );
-            })}
-          </div> */}
-
-          {/* <button
-            type="submit"
-            disabled={submitLoading}
-            className={`bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-8 rounded-lg transition flex items-center justify-center gap-2 min-w-[200px] ${
-              submitLoading ? "cursor-not-allowed opacity-70" : ""
-            }`}
-          >
-            {submitLoading && <Loader className="w-5 h-5 animate-spin" />}
-            {submitLoading ? "Submitting..." : "Submit Banquet Order"}
-          </button> */}
           <button
             type="submit"
             disabled={submitLoading}

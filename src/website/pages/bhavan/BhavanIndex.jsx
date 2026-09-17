@@ -6,12 +6,12 @@ import BhavanForm from "./BhavanForm";
 const BhavanIndex = () => {
   const breadcrumbLinks = [
     { href: "/", text: "Kutchi Bhavan" },
-    { href: "/booking-hall", text: "Hall Booking Form" },
+    { href: "/booking-hall", text: "Check Hall Availability" },
   ];
   return (
     <>
-      <PageMeta title="Hall Booking Form | Dakshin Ekkam" />
-      <HeroSub title="Hall Booking Form" breadcrumbLinks={breadcrumbLinks} />
+      <PageMeta title="Check Hall Availability | Dakshin Ekkam" />
+      <HeroSub title="Check Hall Availability" breadcrumbLinks={breadcrumbLinks} />
       <BhavanForm />
     </>
   );
