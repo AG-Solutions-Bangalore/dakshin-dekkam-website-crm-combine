@@ -107,14 +107,14 @@ const InputField = forwardRef(
         )}
 
         <div
-          className={`flex items-center border rounded-lg px-3 py-2 focus-within:ring-2 ${
+          className={`flex ${type === "textarea" ? "items-start" : "items-center"} border rounded-lg px-3 py-2 focus-within:ring-2 ${
             error
               ? "border-red-500 focus-within:ring-red-400"
               : "border-[#f5c6c4] focus-within:ring-[#db2920]"
           }`}
         >
           {startIcon && (
-            <span className="mr-2" style={{ color: "#db2920" }}>
+            <span className={`mr-2 ${type === "textarea" ? "mt-0.5" : ""}`} style={{ color: "#db2920" }}>
               {startIcon}
             </span>
           )}
@@ -129,7 +129,7 @@ const InputField = forwardRef(
               rows={rows}
               placeholder={placeholder}
               maxLength={maxLength}
-              className="w-full resize-none outline-none bg-transparent text-gray-700 placeholder-gray-400"
+              className={`w-full resize-none outline-none bg-transparent text-gray-700 placeholder-gray-400 ${className || ""}`}
             />
           ) : type === "file" ? (
             <input

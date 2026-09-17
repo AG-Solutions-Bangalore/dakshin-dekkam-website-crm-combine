@@ -28,7 +28,7 @@ export default function MiddleBanner() {
               onClick={() => navigate("/booking-hall")}
               className="bg-white text-[#db2920] px-8 py-4 rounded-full font-bold text-lg hover:bg-[#fdf0ef] transform hover:scale-105 transition shadow-2xl"
             >
-              Hall Booking
+              Check Availability
               <ChevronRight className="inline ml-2" />
             </button>
           </div>

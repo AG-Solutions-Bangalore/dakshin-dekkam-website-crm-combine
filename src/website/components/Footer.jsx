@@ -273,7 +273,7 @@ function Footer() {
                 to="/booking-hall"
                 className="hover:text-yellow-500 transition-colors"
               >
-                Hall Booking
+                Hall Availability
               </Link>
             </li>
           </ul>
