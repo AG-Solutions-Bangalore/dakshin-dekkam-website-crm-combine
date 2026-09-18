@@ -56,7 +56,7 @@ export default function FloatingContact() {
         {/* Hall Availability */}
         <button
           onClick={() => navigate("/booking-hall")}
-          className="text-white px-5 py-3 rounded-l-xl shadow-lg transition-all duration-300 flex items-center gap-2 hover:pr-6 group"
+          className="text-white px-5 py-3 rounded-l-xl shadow-lg transition-all duration-300 flex justify-center items-center gap-2 hover:pr-6 group min-w-[125px]"
           style={{ background: "linear-gradient(135deg, #1e40af, #1e3a8a)" }}
         >
           <svg
@@ -73,14 +73,14 @@ export default function FloatingContact() {
             />
           </svg>
           <span className="text-sm font-semibold tracking-wider whitespace-nowrap">
-            Check Hall Availability
+             Hall 
           </span>
         </button>
 
         {/* Contact */}
         <button
           onClick={() => setOpen(true)}
-          className="text-white px-6 py-3 rounded-l-xl shadow-lg transition-all duration-300 flex items-center gap-2.5 hover:pr-7 group min-w-[145px]"
+          className="text-white px-4 py-3 rounded-l-xl shadow-lg transition-all duration-300 flex items-center gap-2.5 hover:pr-7 group min-w-[105px]"
           style={{ background: "linear-gradient(135deg, #db2920, #9b1c15)" }}
         >
           <svg
