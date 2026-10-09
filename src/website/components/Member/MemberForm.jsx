@@ -158,7 +158,7 @@
 import { PANEL_LOGIN } from "@/api";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { Loader, Lock, Phone, User } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { showErrorToast } from "../../utils/toast";
@@ -174,6 +174,10 @@ const MemberForm = () => {
   const navigate = useNavigate();
   const { token, id: authUserId } = useSelector((state) => state.auth);
   const loginFormRef = useRef(null);
+
+  useEffect(() => {
+    setFormData({ mobile: "", password: "" });
+  }, []);
 
   const handleChange = (e) => {
     let { name, value } = e.target;
@@ -272,83 +276,109 @@ const MemberForm = () => {
               Already a member?
             </h3>
             <p className="text-sm text-gray-500">
-              Log in below to view and update your latest information.
+              Kindly fill in your details so we can update your information.
             </p>
           </div>
         </div>
 
-        <button
+        {/* <button
           type="button"
           onClick={handleUpdateClick}
           className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-[#db2920] px-5 py-3 font-semibold text-white transition hover:bg-[#b52019]"
         >
           Update Member Details
-        </button>
+        </button> */}
+
+        <Link
+          to="/signup"
+          className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-[#db2920] px-5 py-3 font-semibold text-white transition hover:bg-[#b52019]"
+        >
+          Fill Now
+        </Link>
       </div>
 
       <div ref={loginFormRef} className="max-w-md mx-auto my-6 rounded-xl md:px-6">
-      <form onSubmit={handleSubmit}>
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">
-          Member Area
-        </h2>
+        <form onSubmit={handleSubmit} autoComplete="off">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">
+            Member Area
+          </h2>
 
-        <InputField
-          label="Mobile"
-          name="mobile"
-          value={formData.mobile}
-          onChange={handleChange}
-          placeholder="Enter your mobile"
-          startIcon={<Phone size={18} />}
-          error={errors.mobile}
-        />
+          {/* Hidden inputs to divert aggressive browser autofill */}
+          <input
+            type="text"
+            name="prevent_autofill_username"
+            tabIndex="-1"
+            autoComplete="off"
+            style={{ position: "absolute", opacity: 0, height: 0, width: 0, pointerEvents: "none" }}
+            aria-hidden="true"
+          />
+          <input
+            type="password"
+            name="prevent_autofill_password"
+            tabIndex="-1"
+            autoComplete="new-password"
+            style={{ position: "absolute", opacity: 0, height: 0, width: 0, pointerEvents: "none" }}
+            aria-hidden="true"
+          />
 
-        <InputField
-          label="Password"
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          placeholder="Enter your password"
-          startIcon={<Lock size={18} />}
-          error={errors.password}
-        />
+          <InputField
+            label="Mobile"
+            name="mobile"
+            value={formData.mobile}
+            onChange={handleChange}
+            placeholder="Enter your mobile"
+            startIcon={<Phone size={18} />}
+            error={errors.mobile}
+            autoComplete="one-time-code"
+          />
 
-        <button
-          type="submit"
-          disabled={isApiLoading}
-          className={`w-full mt-3 flex items-center justify-center text-white font-medium py-2 px-4 rounded-lg transition ${
-            isApiLoading ? "opacity-70 cursor-not-allowed" : ""
-          }`}
-          style={{ background: isApiLoading ? "#c02218" : "#db2920" }}
-          onMouseEnter={(e) => {
-            if (!isApiLoading) e.currentTarget.style.background = "#9b1c15";
-          }}
-          onMouseLeave={(e) => {
-            if (!isApiLoading) e.currentTarget.style.background = "#db2920";
-          }}
-        >
-          {isApiLoading ? (
-            <>
-              <Loader className="h-5 w-5 animate-spin mr-2" />
-              Redirecting...
-            </>
-          ) : (
-            "Submit"
-          )}
-        </button>
-      </form>
+          <InputField
+            label="Password"
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Enter your password"
+            startIcon={<Lock size={18} />}
+            error={errors.password}
+            autoComplete="new-password"
+          />
 
-      <div className="text-sm text-gray-600 mt-4 flex justify-end gap-1">
-        <span>Don't have an account?</span>
-        <Link
-          to="/signup"
-          className="font-medium hover:underline"
-          style={{ color: "#db2920" }}
-        >
-          Sign up
-        </Link>
+          <button
+            type="submit"
+            disabled={isApiLoading}
+            className={`w-full mt-3 flex items-center justify-center text-white font-medium py-2 px-4 rounded-lg transition ${isApiLoading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
+            style={{ background: isApiLoading ? "#c02218" : "#db2920" }}
+            onMouseEnter={(e) => {
+              if (!isApiLoading) e.currentTarget.style.background = "#9b1c15";
+            }}
+            onMouseLeave={(e) => {
+              if (!isApiLoading) e.currentTarget.style.background = "#db2920";
+            }}
+          >
+            {isApiLoading ? (
+              <>
+                <Loader className="h-5 w-5 animate-spin mr-2" />
+                Redirecting...
+              </>
+            ) : (
+              "Submit"
+            )}
+          </button>
+        </form>
+
+        <div className="text-sm text-gray-600 mt-4 flex justify-end gap-1">
+          <span>Don't have an account?</span>
+          <Link
+            to="/signup"
+            className="font-medium hover:underline"
+            style={{ color: "#db2920" }}
+          >
+            Sign up
+          </Link>
+        </div>
       </div>
-    </div>
     </>
   );
 };

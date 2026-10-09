@@ -26,36 +26,29 @@ function LazyMap({ websitecompany }) {
   }, []);
 
   return (
-    <section className="pb-12">
-      <div className="container mx-auto px-4">
-        <div
-          ref={mapRef}
-          className="min-h-[300px]"
-          data-aos="fade-up"
-          data-aos-delay="200"
-        >
-          {isVisible ? (
-            <>
-              {!mapLoaded && (
-                <div className="absolute inset-0 rounded-xl w-full h-[400px] bg-gray-200 shadow-md animate-pulse"></div>
-              )}
-              <iframe
-                title="Kutchi Bhavan"
-                src={websitecompany.google_map_url || ""}
-                width="1114"
-                height="477"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="rounded-xl w-full shadow-md relative z-10"
-                onLoad={() => setMapLoaded(true)}
-              ></iframe>
-            </>
-          ) : (
-            <div className="rounded-xl w-full h-[400px] bg-gray-200 shadow-md animate-pulse"></div>
+    <div
+      ref={mapRef}
+      className="relative w-full h-full min-h-[360px] rounded-2xl overflow-hidden shadow-md border border-gray-100 bg-gray-100"
+    >
+      {isVisible ? (
+        <>
+          {!mapLoaded && (
+            <div className="absolute inset-0 w-full h-full bg-gray-200 animate-pulse"></div>
           )}
-        </div>
-      </div>
-    </section>
+          <iframe
+            title="Kutchi Bhavan"
+            src={websitecompany?.google_map_url || ""}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="w-full h-full min-h-[360px] relative z-10 border-0"
+            style={{ border: 0 }}
+            onLoad={() => setMapLoaded(true)}
+          ></iframe>
+        </>
+      ) : (
+        <div className="w-full h-full min-h-[360px] bg-gray-200 animate-pulse"></div>
+      )}
+    </div>
   );
 }
 

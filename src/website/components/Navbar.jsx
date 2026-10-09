@@ -60,7 +60,7 @@ function Navbar() {
     //   onClick: () => setOpen(false),
     // },
     {
-      label: "Contact",
+      label: "Contact Us",
       path: "/contact",
       icon: <Phone className="h-5 w-5" />,
       onClick: () => setOpen(false),
@@ -100,17 +100,24 @@ function Navbar() {
             : "-translate-y-full"
         } ${isHome ? "text-white" : "text-black"}`}
       >
-        <div className="max-w-full mx-auto px-4 md:px-5 flex items-center justify-around">
-          <div className="relative">
+        <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-4 md:px-6 lg:px-8 flex items-center justify-between gap-4">
+          <div className="relative shrink-0">
             <Link
               to="/"
-              className="text-xl relative z-40 flex flex-row items-center gap-4 font-bold tracking-widest rounded-lg focus:outline-none focus:shadow-outline"
+              className="relative z-40 flex flex-row items-center gap-3 font-bold rounded-lg focus:outline-none"
             >
-              <img src="./logo.png" alt="app_logo" className="w-10 h-10" />
-              <span className="font-bold text-sm sm:text-lg md:text-xl leading-tight sm:leading-normal">Dakshin Bharat Kutchi Dasha Oswal Jain Ekkam</span>
+              <img src="./logo.png" alt="app_logo" className="w-10 h-10 shrink-0" />
+              <div className="flex flex-col leading-tight">
+                <span className="font-bold text-xs sm:text-sm md:text-base lg:text-lg whitespace-nowrap">
+                  Dakshin Bharat Kutchi Dasha Oswal Jain
+                </span>
+                <span className="font-bold text-xs sm:text-sm md:text-base lg:text-lg">
+                  Ekkam
+                </span>
+              </div>
             </Link>
           </div>
-             <DesktopNavbar menuItems={menuItems} />
+          <DesktopNavbar menuItems={menuItems} />
         </div>
       </div>
 

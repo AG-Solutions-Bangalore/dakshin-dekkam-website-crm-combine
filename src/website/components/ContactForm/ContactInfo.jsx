@@ -56,61 +56,74 @@
 
 // export default ContactInfo;
 import { Mail, MapPin } from "lucide-react";
+import LazyMap from "./LazyMap";
 
 const ContactInfo = ({ websitecompany }) => {
   return (
-    <section className="py-12 bg-[#faf7f7] mb-8">
+    <section className="py-12 bg-[#faf7f7]">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
-          {/* Email Card */}
-          <div
-            className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 bg-white shadow-md p-6 rounded-2xl hover:shadow-lg transition"
-            data-aos="zoom-in"
-          >
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          {/* Left Side: Email Us and Address one by one */}
+          <div className="lg:col-span-5 flex flex-col justify-center gap-6">
+            {/* Email Card */}
             <div
-              className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full"
-              style={{ background: "#fdf0ef" }}
+              className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 bg-white shadow-md p-6 rounded-2xl hover:shadow-lg transition border border-gray-100"
+              data-aos="zoom-in"
             >
-              <Mail size={28} style={{ color: "#db2920" }} />
+              <div
+                className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full"
+                style={{ background: "#fdf0ef" }}
+              >
+                <Mail size={28} style={{ color: "#db2920" }} />
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <h3 className="text-midnight_text text-lg sm:text-xl font-semibold">
+                  Email Us
+                </h3>
+                <p className="text-black/70 text-sm sm:text-base mt-2 leading-relaxed">
+                  Feel free to contact us at{" "}
+                  <a
+                    href={`mailto:${websitecompany?.support_email || ""}`}
+                    className="font-medium hover:underline"
+                    style={{ color: "#db2920" }}
+                  >
+                    {websitecompany?.support_email || "example@email.com"}
+                  </a>{" "}
+                  — we'll respond promptly.
+                </p>
+              </div>
             </div>
-            <div className="flex-1 text-center sm:text-left">
-              <h3 className="text-midnight_text text-lg sm:text-xl font-semibold">
-                Email Us
-              </h3>
-              <p className="text-black/70 text-sm sm:text-base mt-2 leading-relaxed">
-                Feel free to contact us at{" "}
-                <a
-                  href={`mailto:${websitecompany?.support_email || ""}`}
-                  className="font-medium hover:underline"
-                  style={{ color: "#db2920" }}
-                >
-                  {websitecompany?.support_email || "example@email.com"}
-                </a>{" "}
-                — we'll respond promptly.
-              </p>
+
+            {/* Address Card */}
+            <div
+              className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 bg-white shadow-md p-6 rounded-2xl hover:shadow-lg transition border border-gray-100"
+              data-aos="zoom-in"
+              data-aos-delay="200"
+            >
+              <div
+                className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full"
+                style={{ background: "#fdf0ef" }}
+              >
+                <MapPin size={28} style={{ color: "#db2920" }} />
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <h3 className="text-midnight_text text-lg sm:text-xl font-semibold">
+                  Address
+                </h3>
+                <p className="text-black/70 text-sm sm:text-base mt-2 leading-relaxed">
+                  {websitecompany?.store_address || "No address provided"}
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Address Card */}
+          {/* Right Side: Map */}
           <div
-            className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 bg-white shadow-md p-6 rounded-2xl hover:shadow-lg transition"
-            data-aos="zoom-in"
+            className="lg:col-span-7 flex flex-col justify-center min-h-[360px]"
+            data-aos="fade-up"
             data-aos-delay="200"
           >
-            <div
-              className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full"
-              style={{ background: "#fdf0ef" }}
-            >
-              <MapPin size={28} style={{ color: "#db2920" }} />
-            </div>
-            <div className="flex-1 text-center sm:text-left">
-              <h3 className="text-midnight_text text-lg sm:text-xl font-semibold">
-                Address
-              </h3>
-              <p className="text-black/70 text-sm sm:text-base mt-2 leading-relaxed">
-                {websitecompany?.store_address || "No address provided"}
-              </p>
-            </div>
+            <LazyMap websitecompany={websitecompany} />
           </div>
         </div>
       </div>

@@ -167,13 +167,13 @@ const CommunityForm = () => {
 
     if (!formData.branch_id) newErrors.branch_id = "Branch is required";
 
-    if (!formData.user_city) newErrors.user_city = "City is required";
+    // if (!formData.user_city) newErrors.user_city = "City is required";
     if (!formData.user_age) newErrors.user_age = "Age is required";
     if (!formData.user_dob) newErrors.user_dob = "Born Year is required";
     if (!formData.native_place)
       newErrors.native_place = "Native Place is required";
-    if (!formData.user_state) newErrors.user_state = "State is required";
-    if (!formData.user_pincode) newErrors.user_pincode = "Pincode is required";
+    // if (!formData.user_state) newErrors.user_state = "State is required";
+    // if (!formData.user_pincode) newErrors.user_pincode = "Pincode is required";
 
     const captchaResult = validateCaptcha();
     if (!captchaResult.isValid) {
@@ -443,13 +443,24 @@ const CommunityForm = () => {
           startIcon={<GitBranch size={18} />}
         />
 
-        {/* Address, City, State, Pin all together in two rows */}
-        <div className="md:col-span-2 lg:col-span-3">
+        <InputField
+          ref={fileInputRef}
+          label="Photo"
+          type="file"
+          name="user_image"
+          onChange={handleChange}
+          startIcon={<User size={18} />}
+          accept="image/*"
+        />
+
+        {/* Address and Captcha in one line */}
+        <div className="md:col-span-2 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
           <InputField
             ref={fieldRefs.resi_address}
             label="Address"
             name="resi_address"
             type="textarea"
+            rows={3}
             value={formData.resi_address}
             onChange={handleChange}
             placeholder="Enter full address"
@@ -457,8 +468,22 @@ const CommunityForm = () => {
             required
             startIcon={<Home size={18} />}
           />
+
+          <CaptchaField
+            captchaCode={captchaCode}
+            captchaInput={captchaInput}
+            onChange={(e) => {
+              setCaptchaInput(e.target.value);
+              if (errors.captcha) setErrors((prev) => ({ ...prev, captcha: "" }));
+            }}
+            onRefresh={refreshCaptcha}
+            honeypot={honeypot}
+            onHoneypotChange={(e) => setHoneypot(e.target.value)}
+            error={errors.captcha}
+          />
         </div>
-        <SelectField
+
+        {/* <SelectField
           label="City"
           name="user_city"
           value={formData.user_city}
@@ -500,53 +525,27 @@ const CommunityForm = () => {
           required
           ref={fieldRefs.user_pincode}
           maxLength={6}
-        />
-
-        <div className="md:col-span-2 lg:col-span-1">
-          <InputField
-            ref={fileInputRef}
-            label="Photo"
-            type="file"
-            name="user_image"
-            onChange={handleChange}
-            startIcon={<User size={18} />}
-            accept="image/*"
-          />
-        </div>
+        /> */}
       </div>
 
-      <div className="max-w-md mt-4">
-        <CaptchaField
-          captchaCode={captchaCode}
-          captchaInput={captchaInput}
-          onChange={(e) => {
-            setCaptchaInput(e.target.value);
-            if (errors.captcha) setErrors((prev) => ({ ...prev, captcha: "" }));
+      <div className="flex justify-center mt-6">
+        <button
+          type="submit"
+          disabled={submitLoading}
+          className={`min-w-[250px] px-8 py-2.5 text-white font-medium rounded-lg transition flex items-center justify-center gap-2 ${submitLoading ? "cursor-not-allowed opacity-70" : ""
+            }`}
+          style={{ background: "#db2920" }}
+          onMouseEnter={(e) => {
+            if (!submitLoading) e.currentTarget.style.background = "#9b1c15";
           }}
-          onRefresh={refreshCaptcha}
-          honeypot={honeypot}
-          onHoneypotChange={(e) => setHoneypot(e.target.value)}
-          error={errors.captcha}
-        />
+          onMouseLeave={(e) => {
+            if (!submitLoading) e.currentTarget.style.background = "#db2920";
+          }}
+        >
+          {submitLoading && <Loader className="w-5 h-5 animate-spin" />}
+          {submitLoading ? "Submitting..." : "Submit"}
+        </button>
       </div>
-
-      <button
-        type="submit"
-        disabled={submitLoading}
-        className={`w-full mt-3 text-white font-medium py-2 px-4 rounded-lg transition flex items-center justify-center gap-2 ${
-          submitLoading ? "cursor-not-allowed opacity-70" : ""
-        }`}
-        style={{ background: "#db2920" }}
-        onMouseEnter={(e) => {
-          if (!submitLoading) e.currentTarget.style.background = "#9b1c15";
-        }}
-        onMouseLeave={(e) => {
-          if (!submitLoading) e.currentTarget.style.background = "#db2920";
-        }}
-      >
-        {submitLoading && <Loader className="w-5 h-5 animate-spin" />}
-        {submitLoading ? "Submitting..." : "Register"}
-      </button>
     </form>
   );
 };
