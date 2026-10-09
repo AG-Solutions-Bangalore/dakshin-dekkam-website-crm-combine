@@ -93,6 +93,8 @@ const InputField = forwardRef(
       className,
       disabled,
       readOnly,
+      autoComplete,
+      ...rest
     },
     ref,
   ) => {
@@ -135,6 +137,8 @@ const InputField = forwardRef(
               maxLength={maxLength}
               disabled={disabled}
               readOnly={readOnly}
+              autoComplete={autoComplete}
+              {...rest}
               className={`w-full resize-none outline-none bg-transparent text-gray-700 placeholder-gray-400 ${className || ""}`}
             />
           ) : type === "file" ? (
@@ -147,6 +151,7 @@ const InputField = forwardRef(
               accept={accept}
               disabled={disabled}
               readOnly={readOnly}
+              {...rest}
               className={`w-full outline-none bg-transparent text-gray-700 placeholder-gray-400 ${className || ""}`}
             />
           ) : (
@@ -161,6 +166,8 @@ const InputField = forwardRef(
               maxLength={maxLength}
               disabled={disabled}
               readOnly={readOnly}
+              autoComplete={autoComplete}
+              {...rest}
               className={`w-full outline-none bg-transparent text-gray-700 placeholder-gray-400 ${className || ""}`}
             />
           )}

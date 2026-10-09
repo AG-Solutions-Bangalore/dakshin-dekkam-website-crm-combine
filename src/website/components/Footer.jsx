@@ -265,7 +265,7 @@ function Footer() {
                 to="/contact"
                 className="hover:text-yellow-500 transition-colors"
               >
-                Contact
+                Contact Us
               </Link>
             </li>
             <li>

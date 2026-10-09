@@ -9,9 +9,9 @@ const Signup = () => {
   ];
   return (
     <>
-      <PageMeta title="Sign up | Dakshin Ekkam" />
+      <PageMeta title=" | Dakshin Ekkam" />
       <HeroSub
-        title="Sign up "
+        title=" "
         breadcrumbLinks={breadcrumbLinks}
       />
       <CommunityForm />

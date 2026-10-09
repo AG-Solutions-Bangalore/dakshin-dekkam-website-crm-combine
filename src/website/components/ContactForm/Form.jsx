@@ -300,7 +300,7 @@ const Form = () => {
         <button
           type="submit"
           disabled={submitLoading}
-          className={`w-full mt-3 text-white font-medium py-2 px-4 rounded-lg transition flex items-center justify-center gap-2 ${
+          className={`min-w-[180px] px-8 py-2.5 text-white font-medium rounded-lg transition flex items-center justify-center gap-2 ${
             submitLoading ? "cursor-not-allowed opacity-70" : ""
           }`}
           style={{ background: "#db2920" }}
