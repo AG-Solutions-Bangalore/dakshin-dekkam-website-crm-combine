@@ -186,7 +186,7 @@ export default function BhavanWebsite() {
                   }}
                 ></div>
                 <img
-                  src="/img/bhavan.png"
+                  src="/img/bhavan.jpg"
                   alt="Bhavan Building"
                   className="relative w-full h-full object-cover rounded-md shadow-xl hover:shadow-2xl transform hover:scale-105 transition duration-500"
                 />
@@ -278,7 +278,7 @@ export default function BhavanWebsite() {
 
             <div className="flex items-center justify-center rounded-xl border border-red-200 bg-red-50 px-6 py-4 text-center shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1">
               <span className="text-sm font-medium text-red-800">
-                🙏 <strong>Community Support:</strong> Bhavan is pleased to extend complimentary use of its premises 
+                🙏 <strong>Community Support:</strong> Bhavan is pleased to extend complimentary use of its premises
                 for third-day prayer ceremonies, (T&C applicable).</span>
             </div>
           </div>

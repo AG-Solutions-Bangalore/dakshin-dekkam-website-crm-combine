@@ -9,7 +9,6 @@ import {
 } from "@/hooks/useApi";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { MarriedStatus } from "@/website/constants/selectOptions";
-import { associateMahajan } from "@/website/data/associatemahajan";
 import generateYearOptions from "@/website/utils/generateYearOptions";
 import {
   Book,
@@ -30,6 +29,7 @@ import { useRef, useState } from "react";
 import { showErrorToast, showSuccessToast } from "../../utils/toast";
 import InputField from "../common/InputField";
 import SelectField from "../common/SelectField";
+import CaptchaField, { useCaptcha } from "../common/CaptchaField";
 import { useGetApiMutation } from "@/hooks/useGetApiMutation";
 
 const CommunityForm = () => {
@@ -47,7 +47,6 @@ const CommunityForm = () => {
     branch_id: "",
     user_education: "",
     resi_address: "",
-    place_of_residence: "",
     user_image: "",
     native_place: "",
     user_doa: "",
@@ -61,6 +60,15 @@ const CommunityForm = () => {
   const fileInputRef = useRef(null);
 
   const [errors, setErrors] = useState({});
+  const {
+    captchaCode,
+    captchaInput,
+    setCaptchaInput,
+    honeypot,
+    setHoneypot,
+    refreshCaptcha,
+    validateCaptcha,
+  } = useCaptcha();
   const { data: blodGroupdata } = useFetchBloodGroup();
   const { data: branchdata } = useFetchBranch();
   const { data: nativedata, isLoading: loadingnative } = useFetchNative();
@@ -93,14 +101,33 @@ const CommunityForm = () => {
     if (
       name == "mobile" ||
       name == "user_whatsapp" ||
-      name == "user_pincode" ||
-      name == "user_age"
+      name == "user_pincode"
     ) {
       const numericValue = value.replace(/\D/g, "");
       if (numericValue.length <= 10) {
         setFormData({ ...formData, [name]: numericValue });
         setErrors({ ...errors, [name]: "" });
       }
+      return;
+    }
+
+    if (name === "user_dob") {
+      const birthYear = Number(value);
+      const currentYear = new Date().getFullYear();
+      const calculatedAge =
+        birthYear && birthYear <= currentYear
+          ? String(currentYear - birthYear)
+          : "";
+      setFormData({
+        ...formData,
+        user_dob: value,
+        user_age: calculatedAge,
+      });
+      setErrors({
+        ...errors,
+        user_dob: "",
+        user_age: "",
+      });
       return;
     }
 
@@ -120,11 +147,11 @@ const CommunityForm = () => {
     if (!formData.last_name?.trim())
       newErrors.last_name = "Last name is required";
 
-    // if (!formData.email) {
-    //   newErrors.email = "Email is required";
-    // } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-    //   newErrors.email = "Enter a valid email";
-    // }
+    if (!formData.email?.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Enter a valid email";
+    }
 
     if (!formData.mobile) {
       newErrors.mobile = "Mobile number is required";
@@ -147,6 +174,11 @@ const CommunityForm = () => {
       newErrors.native_place = "Native Place is required";
     if (!formData.user_state) newErrors.user_state = "State is required";
     if (!formData.user_pincode) newErrors.user_pincode = "Pincode is required";
+
+    const captchaResult = validateCaptcha();
+    if (!captchaResult.isValid) {
+      newErrors.captcha = captchaResult.message;
+    }
 
     return newErrors;
   };
@@ -201,7 +233,6 @@ const CommunityForm = () => {
           branch_id: "",
           user_education: "",
           resi_address: "",
-          place_of_residence: "",
           user_image: null,
           native_place: "",
           user_doa: "",
@@ -213,6 +244,7 @@ const CommunityForm = () => {
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
+        refreshCaptcha();
       } else {
         showErrorToast(response.message || "Something went wrong");
       }
@@ -294,13 +326,14 @@ const CommunityForm = () => {
           label="Age"
           name="user_age"
           value={formData.user_age}
-          onChange={handleChange}
-          placeholder="Enter your age"
+          disabled
+          readOnly
+          placeholder="Auto-calculated from Born Year"
           startIcon={<Calendar size={18} />}
           error={errors.user_age}
           required
           ref={fieldRefs.user_age}
-          maxLength={2}
+          maxLength={3}
         />
         <InputField
           label="Email"
@@ -310,9 +343,9 @@ const CommunityForm = () => {
           onChange={handleChange}
           placeholder="Enter email"
           startIcon={<Mail size={18} />}
-          // error={errors.email}
-          // required
-          // ref={fieldRefs.email}
+          error={errors.email}
+          required
+          ref={fieldRefs.email}
         />
         <InputField
           label="Mobile"
@@ -377,38 +410,6 @@ const CommunityForm = () => {
           startIcon={<Heart size={18} />}
         />
 
-        {/* Address */}
-        {/* <InputField
-          label="Place of Residence"
-          name="place_of_residence"
-          value={formData.place_of_residence}
-          onChange={handleChange}
-          placeholder="Enter place of residence"
-          startIcon={<Home size={18} />}
-        /> */}
-        <SelectField
-          label="Place of Residence"
-          name="place_of_residence"
-          value={formData.place_of_residence}
-          onChange={handleChange}
-          options={
-            associateMahajan?.map((occupation) => ({
-              value: occupation.value,
-              label: occupation.label,
-            })) || []
-          }
-          startIcon={<Home size={18} />}
-        />
-        {/*  */}
-        {/* <InputField
-          label="Native Place in Kutch"
-          name="native_place"
-          value={formData.native_place}
-          onChange={handleChange}
-          placeholder="Enter native place"
-          startIcon={<MapPin size={18} />}
-        /> */}
-
         <SelectField
           label="Native Place in Kutch"
           name="native_place"
@@ -441,17 +442,22 @@ const CommunityForm = () => {
           ref={fieldRefs.branch_id}
           startIcon={<GitBranch size={18} />}
         />
-        {/* <InputField
-          label="City"
-          name="user_city"
-          value={formData.user_city}
-          onChange={handleChange}
-          placeholder="Enter your city"
-          startIcon={<MapPin size={18} />}
-          error={errors.user_city}
-          required
-          ref={fieldRefs.user_city}
-        /> */}
+
+        {/* Address, City, State, Pin all together in two rows */}
+        <div className="md:col-span-2 lg:col-span-3">
+          <InputField
+            ref={fieldRefs.resi_address}
+            label="Address"
+            name="resi_address"
+            type="textarea"
+            value={formData.resi_address}
+            onChange={handleChange}
+            placeholder="Enter full address"
+            error={errors.resi_address}
+            required
+            startIcon={<Home size={18} />}
+          />
+        </div>
         <SelectField
           label="City"
           name="user_city"
@@ -496,53 +502,34 @@ const CommunityForm = () => {
           maxLength={6}
         />
 
-        {/* Group ID */}
-        {/* <InputField
-          label="MID"
-          name="user_group_mid"
-          value={formData.user_group_mid}
-          onChange={handleChange}
-          placeholder="Enter MID"
-          startIcon={<Group size={18} />}
-        /> */}
-        <div className="md:col-span-3 flex gap-20">
+        <div className="md:col-span-2 lg:col-span-1">
           <InputField
-            label="Residential Address"
-            name="resi_address"
-            type="textarea"
-            value={formData.resi_address}
+            ref={fileInputRef}
+            label="Photo"
+            type="file"
+            name="user_image"
             onChange={handleChange}
-            placeholder="Enter your address"
-            // error={errors.resi_address}
-            // required
-            // ref={fieldRefs.resi_address}
+            startIcon={<User size={18} />}
+            accept="image/*"
           />
-        <InputField
-          ref={fileInputRef}
-          label="Photo"
-          type="file"
-          name="user_image"
-          value={formData.user_image}
-          onChange={handleChange}
-          startIcon={<User size={18} />}
-          accept="image/*"
-          className="w-2"
-        />
         </div>
-        
-
       </div>
 
-      {/* <button
-        type="submit"
-        disabled={submitLoading}
-        className={`w-full mt-3 bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-lg transition flex items-center justify-center gap-2 ${
-          submitLoading ? "cursor-not-allowed opacity-70" : ""
-        }`}
-      >
-        {submitLoading && <Loader className="w-5 h-5 animate-spin" />}
-        {submitLoading ? "Submitting..." : "Register"}
-      </button> */}
+      <div className="max-w-md mt-4">
+        <CaptchaField
+          captchaCode={captchaCode}
+          captchaInput={captchaInput}
+          onChange={(e) => {
+            setCaptchaInput(e.target.value);
+            if (errors.captcha) setErrors((prev) => ({ ...prev, captcha: "" }));
+          }}
+          onRefresh={refreshCaptcha}
+          honeypot={honeypot}
+          onHoneypotChange={(e) => setHoneypot(e.target.value)}
+          error={errors.captcha}
+        />
+      </div>
+
       <button
         type="submit"
         disabled={submitLoading}

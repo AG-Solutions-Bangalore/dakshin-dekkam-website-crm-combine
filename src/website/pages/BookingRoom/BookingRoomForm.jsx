@@ -16,10 +16,9 @@ import { useFetchBranch } from '@/hooks/useApi';
 
 import InputField from '@/website/components/common/InputField';
 import SelectField from '@/website/components/common/SelectField';
+import CaptchaField, { useCaptcha } from '@/website/components/common/CaptchaField';
 import { showErrorToast, showSuccessToast } from '../../utils/toast';
 import { CREATE_BOOKING_ROOM } from '@/api';
-
-
 
 const BookingRoomForm = () => {
   const [formData, setFormData] = useState({
@@ -43,6 +42,15 @@ const BookingRoomForm = () => {
   const { trigger: submitTrigger, loading: submitLoading } = useApiMutation();
   const { data: branchdata } = useFetchBranch();
   const [errors, setErrors] = useState({});
+  const {
+    captchaCode,
+    captchaInput,
+    setCaptchaInput,
+    honeypot,
+    setHoneypot,
+    refreshCaptcha,
+    validateCaptcha,
+  } = useCaptcha();
 
   const fieldRefs = {
     branch_id: useRef(null),
@@ -110,6 +118,11 @@ const BookingRoomForm = () => {
     if (!formData.guest_checkOut_date) newErrors.guest_checkOut_date = 'Checkout Date is required';
     if (!formData.guest_checkOut_time) newErrors.guest_checkOut_time = 'Checkout Time is required';
 
+    const captchaResult = validateCaptcha();
+    if (!captchaResult.isValid) {
+      newErrors.captcha = captchaResult.message;
+    }
+
     return newErrors;
   };
 
@@ -141,7 +154,6 @@ const BookingRoomForm = () => {
       if (response?.code === 201) {
         showSuccessToast(response.message || 'Room booking request submitted successfully!');
         
-        
         setFormData({
           branch_id: '',
           guest_name: '',
@@ -159,6 +171,7 @@ const BookingRoomForm = () => {
           guest_checkOut_time: '',
           guest_note: ''
         });
+        refreshCaptcha();
       } else {
         showErrorToast(response.message || 'Something went wrong');
       }
@@ -399,7 +412,21 @@ const BookingRoomForm = () => {
             onChange={handleChange}
             placeholder="Enter any specific requests or comments"
             startIcon={<MessageCircle size={18} />}
-            // guest_note is NOT required
+          />
+        </div>
+
+        <div className="md:col-span-2 lg:col-span-3 max-w-md mt-2">
+          <CaptchaField
+            captchaCode={captchaCode}
+            captchaInput={captchaInput}
+            onChange={(e) => {
+              setCaptchaInput(e.target.value);
+              if (errors.captcha) setErrors((prev) => ({ ...prev, captcha: '' }));
+            }}
+            onRefresh={refreshCaptcha}
+            honeypot={honeypot}
+            onHoneypotChange={(e) => setHoneypot(e.target.value)}
+            error={errors.captcha}
           />
         </div>
       </div>

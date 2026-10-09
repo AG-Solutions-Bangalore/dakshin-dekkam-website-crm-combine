@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import InputField from "@/website/components/common/InputField";
+import CaptchaField, { useCaptcha } from "@/website/components/common/CaptchaField";
 import { showErrorToast, showSuccessToast } from "../../utils/toast";
 import { CREATE_BOOKING_HALL } from "@/api";
 
@@ -80,6 +81,15 @@ const BhavanForm = () => {
   const [errors, setErrors] = useState({});
   const [activeSection, setActiveSection] = useState("guest");
   const [showTermsModal, setShowTermsModal] = useState(false);
+  const {
+    captchaCode,
+    captchaInput,
+    setCaptchaInput,
+    honeypot,
+    setHoneypot,
+    refreshCaptcha,
+    validateCaptcha,
+  } = useCaptcha();
 
   const fieldRefs = {
     guest_name: useRef(null),
@@ -153,6 +163,11 @@ const BhavanForm = () => {
     if (!formData.terms_accepted)
       newErrors.terms_accepted = "You must accept the terms and conditions";
 
+    const captchaResult = validateCaptcha();
+    if (!captchaResult.isValid) {
+      newErrors.captcha = captchaResult.message;
+    }
+
     return newErrors;
   };
 
@@ -192,9 +207,7 @@ const BhavanForm = () => {
       });
 
       if (response?.code === 201) {
-        showSuccessToast(
-          response.message || "Hall availability enquiry submitted successfully!",
-        );
+        showSuccessToast("Request created successfully!");
 
         // Reset form
         setFormData({
@@ -214,6 +227,7 @@ const BhavanForm = () => {
           no_of_guest: "",
           terms_accepted: false,
         });
+        refreshCaptcha();
       } else {
         showErrorToast(response.message || "Something went wrong");
       }
@@ -548,6 +562,23 @@ const BhavanForm = () => {
                   {errors.terms_accepted}
                 </span>
               )}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg px-4 py-3 mt-4">
+            <div className="max-w-md">
+              <CaptchaField
+                captchaCode={captchaCode}
+                captchaInput={captchaInput}
+                onChange={(e) => {
+                  setCaptchaInput(e.target.value);
+                  if (errors.captcha) setErrors((prev) => ({ ...prev, captcha: "" }));
+                }}
+                onRefresh={refreshCaptcha}
+                honeypot={honeypot}
+                onHoneypotChange={(e) => setHoneypot(e.target.value)}
+                error={errors.captcha}
+              />
             </div>
           </div>
         </div>

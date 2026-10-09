@@ -20,12 +20,17 @@ import {
 } from "@/crm/components/ui/sidebar";
 import useLogout from "@/hooks/useLogout";
 import { setShowUpdateDialog } from "@/redux/slices/versionSlice";
-import { ArrowRight, ChevronsUpDown, Key, LogOut } from "lucide-react";
+import { ArrowRight, ChevronsUpDown, Key, LogOut, User } from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { encryptId } from "@/crm/utils/encyrption/Encyrption";
 
 export function NavUser({ user }) {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const authUserId = useSelector((state) => state.auth?.id);
+  const userType = useSelector((state) => state.auth?.user_type);
 
   const { isMobile } = useSidebar();
   const user_position = useSelector((state) => state.auth.user_position);
@@ -90,9 +95,8 @@ export function NavUser({ user }) {
               </DropdownMenuTrigger>
               <SidebarMenuButton
                 size="lg"
-                className={`data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground p-0 cursor-text data-[state=open]: ${
-                  sidebar ? "text-red-950" : "hidden"
-                }`}
+                className={`data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground p-0 cursor-text data-[state=open]: ${sidebar ? "text-red-950" : "hidden"
+                  }`}
               >
                 <div className="rounded-lg bg-sidebar-primary text-sidebar-primary-foreground px-4 py-2 w-full  h-10 ">
                   <div className="flex justify-between items-center h-full w-full text-xs leading-tight text-center">
@@ -103,7 +107,7 @@ export function NavUser({ user }) {
                       </span>
                     </span>
                     <span className="flex items-center gap-1 font-semibold">
-                      Updated on :09/03/2026
+                      Updated on :09/10/2026
                     </span>
                   </div>
                 </div>
@@ -132,6 +136,19 @@ export function NavUser({ user }) {
                 </DropdownMenuLabel>
 
                 <DropdownMenuSeparator />
+
+                {authUserId && userType != 2 && userType != 3 && (
+                  <DropdownMenuItem
+                    onClick={() =>
+                      navigate(
+                        `/crm/member-form/${encodeURIComponent(encryptId(authUserId))}`
+                      )
+                    }
+                  >
+                    <User />
+                    <span className="cursor-pointer">My Profile</span>
+                  </DropdownMenuItem>
+                )}
 
                 <DropdownMenuItem onClick={() => setOpen(true)}>
                   <Key />

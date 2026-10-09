@@ -21,7 +21,7 @@ const PrevArrow = ({ onClick }) => (
   </div>
 );
 
-const images = ["/img/banner-1.png", "/img/banner-2.png", "/img/banner-3.png"];
+const images = ["/img/banner-1.jpg", "/img/banner-2.jpg", "/img/banner-3.jpg"];
 
 const HeroMain = () => {
   const settings = {
@@ -39,16 +39,18 @@ const HeroMain = () => {
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full overflow-hidden">
       <Slider {...settings}>
         {images.map((src, idx) => (
-          <div key={idx} className="relative w-full">
+          <div
+            key={idx}
+            className="relative w-full aspect-[16/9] max-h-[95vh] overflow-hidden"
+          >
             <img
               src={src}
               alt={`Slide ${idx + 1}`}
-              className="w-full h-auto object-contain"
+              className="w-full h-full object-cover object-center"
             />
-            {/* <div className="absolute inset-0 bg-black/30" /> */}
           </div>
         ))}
       </Slider>

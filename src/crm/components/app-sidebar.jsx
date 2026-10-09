@@ -20,10 +20,13 @@ import {
 } from "@/crm/components/ui/sidebar";
 import { useSelector } from "react-redux";
 import Logo from "./common/Logo";
+import { encryptId } from "@/crm/utils/encyrption/Encyrption";
 
 export function AppSidebar({ ...props }) {
   const nameL = useSelector((state) => state.auth.name);
   const emailL = useSelector((state) => state.auth.email);
+  const authUserId = useSelector((state) => state.auth?.id);
+  const userType = useSelector((state) => state.auth?.user_type);
 
   const initialData = {
     user: {
@@ -54,6 +57,16 @@ export function AppSidebar({ ...props }) {
         icon: House,
         isActive: false,
       },
+      ...(authUserId && userType != 2 && userType != 3
+        ? [
+            {
+              title: "My Profile",
+              url: `/crm/member-form/${encodeURIComponent(encryptId(authUserId))}`,
+              icon: Users,
+              isActive: false,
+            },
+          ]
+        : []),
 
       {
         title: "Member",

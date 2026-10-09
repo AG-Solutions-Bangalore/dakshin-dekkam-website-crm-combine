@@ -21,6 +21,7 @@ import { useFetchBranch } from "@/hooks/useApi";
 
 import InputField from "@/website/components/common/InputField";
 import SelectField from "@/website/components/common/SelectField";
+import CaptchaField, { useCaptcha } from "@/website/components/common/CaptchaField";
 import { showErrorToast, showSuccessToast } from "../../utils/toast";
 import { CREATE_LOAN_API } from "@/api";
 
@@ -75,6 +76,15 @@ const LoanForm = () => {
   const { trigger: submitTrigger, loading: submitLoading } = useApiMutation();
   const { data: branchdata } = useFetchBranch();
   const [errors, setErrors] = useState({});
+  const {
+    captchaCode,
+    captchaInput,
+    setCaptchaInput,
+    honeypot,
+    setHoneypot,
+    refreshCaptcha,
+    validateCaptcha,
+  } = useCaptcha();
 
   const fieldRefs = {
     branch_id: useRef(null),
@@ -333,6 +343,11 @@ const LoanForm = () => {
       newErrors.declaration = "You must accept the declaration";
     }
 
+    const captchaResult = validateCaptcha();
+    if (!captchaResult.isValid) {
+      newErrors.captcha = captchaResult.message;
+    }
+
     return newErrors;
   };
 
@@ -447,6 +462,7 @@ const LoanForm = () => {
             fieldRefs[key].current.value = "";
           }
         });
+        refreshCaptcha();
       } else {
         showErrorToast(response.message || "Something went wrong");
       }
@@ -1129,6 +1145,21 @@ const LoanForm = () => {
             )}
           </div>
         </div>
+      </div>
+
+      <div className="max-w-md mt-6">
+        <CaptchaField
+          captchaCode={captchaCode}
+          captchaInput={captchaInput}
+          onChange={(e) => {
+            setCaptchaInput(e.target.value);
+            if (errors.captcha) setErrors((prev) => ({ ...prev, captcha: "" }));
+          }}
+          onRefresh={refreshCaptcha}
+          honeypot={honeypot}
+          onHoneypotChange={(e) => setHoneypot(e.target.value)}
+          error={errors.captcha}
+        />
       </div>
 
       {/* Submit Button */}

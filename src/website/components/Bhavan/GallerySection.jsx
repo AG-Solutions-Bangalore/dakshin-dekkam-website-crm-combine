@@ -166,31 +166,31 @@ export default function GallerySection() {
   const galleryImages = [
     {
       id: 1,
-      src: "/img/gallery.jpg",
+      src: "/img/gallery1.jpg",
       title: "Community Events",
       category: "Celebrations",
     },
     {
       id: 2,
-      src: "/img/gallery1.jpg",
+      src: "/img/gallery2.jpg",
       title: "Cultural Programs",
       category: "Heritage",
     },
     {
       id: 3,
-      src: "/img/gallery2.jpg",
+      src: "/img/gallery3.jpg",
       title: "Workshops",
       category: "Learning",
     },
     {
       id: 4,
-      src: "/img/gallery3.jpg",
+      src: "/img/gallery4.jpg",
       title: "Social Gatherings",
       category: "Bonding",
     },
     {
       id: 5,
-      src: "/img/gallery4.jpg",
+      src: "/img/gallery5.jpg",
       title: "Educational Events",
       category: "Knowledge",
     },
@@ -245,11 +245,10 @@ export default function GallerySection() {
                 key={image.id}
                 onClick={() => goToSlide(idx)}
                 aria-label={`Go to ${image.title}`}
-                className={`flex-shrink-0 w-24 h-20 lg:w-full lg:h-24 rounded-lg overflow-hidden transition-all duration-300 border-2 ${
-                  idx === currentSlide
+                className={`flex-shrink-0 w-24 h-20 lg:w-full lg:h-24 rounded-lg overflow-hidden transition-all duration-300 border-2 ${idx === currentSlide
                     ? "shadow-md opacity-100"
                     : "border-gray-300 opacity-70 hover:opacity-100"
-                }`}
+                  }`}
                 style={
                   idx === currentSlide
                     ? { borderColor: "#db2920" }
@@ -259,9 +258,8 @@ export default function GallerySection() {
                 <img
                   src={image.src}
                   alt={image.title}
-                  className={`w-full h-full object-cover transition-transform duration-300 ${
-                    idx === currentSlide ? "scale-105" : "hover:scale-105"
-                  }`}
+                  className={`w-full h-full object-cover transition-transform duration-300 ${idx === currentSlide ? "scale-105" : "hover:scale-105"
+                    }`}
                 />
               </button>
             ))}

@@ -11,22 +11,44 @@ import { ButtonConfig } from "@/crm/config/ButtonConfig";
 import { useToast } from "@/hooks/use-toast";
 import {
   useFetchBloodGroup,
+  useFetchBranch,
   useFetchCity,
   useFetchNative,
   useFetchOccupation,
   useFetchState,
 } from "@/hooks/useApi";
-import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  Book,
+  Briefcase,
+  Calendar,
+  CheckCircle2,
+  GitBranch,
+  Heart,
+  Home,
+  Loader,
+  Loader2,
+  Locate,
+  LogOut,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  User,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetApiMutation } from "@/hooks/useGetApiMutation";
 import { decryptId } from "@/crm/utils/encyrption/Encyrption";
 import { useApiMutation } from "@/hooks/useApiMutation";
+import useLogout from "@/hooks/useLogout";
+import InputField from "@/website/components/common/InputField";
+import SelectField from "@/website/components/common/SelectField";
 import generateYearOptions from "@/website/utils/generateYearOptions";
 const useFetchMaterial = (id) => {
   return useGetApiMutation({
     url: `${MEMBER_LIST}/${id}`,
-    queryKey: ["materialbyid"],
+    queryKey: ["materialbyid", id],
     options: {
       enabled: !!id,
     },
@@ -53,6 +75,10 @@ const status = [
   },
 ];
 const MemberForm = () => {
+  const authUserId = useSelector((state) => state.auth?.id);
+  const userType = useSelector((state) => state.auth?.user_type);
+  const handleLogout = useLogout();
+
   const { id } = useParams();
   let decryptedId = null;
   const isEdit = Boolean(id);
@@ -65,14 +91,15 @@ const MemberForm = () => {
       console.error("Failed to decrypt ID:", err.message);
     }
   }
-  // const { data: statedata } = useGetApiMutation({
-  //   url: GET_STATES,
-  //   queryKey: ["statedata-crm"],
-  // });
-  const isEditMode = Boolean(id);
+
+  const targetMemberId = userType == 1 && !decryptedId ? authUserId : decryptedId;
+  const isEditMode = Boolean(targetMemberId);
   const { toast } = useToast();
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
+  const [imagePreview, setImagePreview] = useState("");
+  const [showUpdateSuccessModal, setShowUpdateSuccessModal] = useState(false);
+  const fileInputRef = useRef(null);
   const yearOptions = generateYearOptions(1950);
 
   const [formData, setFormData] = useState({
@@ -88,7 +115,7 @@ const MemberForm = () => {
     user_occupation: "",
     user_education: "",
     resi_address: "",
-    place_of_residence: "",
+    branch_id: "",
     native_place: "",
     user_doa: "",
     user_married_status: "",
@@ -96,38 +123,95 @@ const MemberForm = () => {
     user_status: isEditMode ? "" : "Active",
     user_state: "",
     user_pincode: "",
+    user_image: null,
   });
   const { trigger: submitTrigger, loading: submitLoading } = useApiMutation();
-  const { data: materialByid, loading: isFetching } =
-    useFetchMaterial(decryptedId);
+  const { data: materialByid, loading: isFetching, refetch } =
+    useFetchMaterial(targetMemberId);
   useEffect(() => {
-    if (decryptedId && materialByid?.data) {
+    if (targetMemberId && materialByid?.data) {
       const raw = materialByid.data;
+      const birthYear = Number(raw?.user_dob);
+      const currentYear = new Date().getFullYear();
+      const calculatedAge =
+        birthYear && birthYear <= currentYear
+          ? String(currentYear - birthYear)
+          : raw?.user_age || "";
+
+      const rawImage =
+        raw?.user_image ||
+        raw?.image ||
+        raw?.profile_image ||
+        raw?.photo ||
+        raw?.member_image;
+
+      if (rawImage) {
+        let imageBase = "";
+        if (Array.isArray(materialByid?.image_url)) {
+          const matched = materialByid.image_url.find((img) =>
+            /member|community|user|profile/i.test(img.image_for || "")
+          );
+          const fallbackImg = materialByid.image_url.find(
+            (img) => img.image_for && img.image_for !== "No Image"
+          );
+          imageBase =
+            matched?.image_url ||
+            fallbackImg?.image_url ||
+            materialByid.image_url[0]?.image_url ||
+            "";
+        } else if (typeof materialByid?.image_url === "string") {
+          imageBase = materialByid.image_url;
+        }
+
+        if (!imageBase) {
+          const apiBase = import.meta.env.VITE_API_BASE_URL || "";
+          imageBase = apiBase.replace(/\/api\/?$/, "");
+        }
+
+        let previewUrl = rawImage;
+        if (
+          typeof rawImage === "string" &&
+          (rawImage.startsWith("http://") ||
+            rawImage.startsWith("https://") ||
+            rawImage.startsWith("blob:") ||
+            rawImage.startsWith("data:"))
+        ) {
+          previewUrl = rawImage;
+        } else if (typeof rawImage === "string") {
+          const cleanBase = imageBase.replace(/\/+$/, "");
+          const cleanPath = rawImage.replace(/^\/+/, "");
+          previewUrl = `${cleanBase}/${cleanPath}`;
+        }
+        setImagePreview(previewUrl);
+      }
+
       setFormData({
         first_name: raw?.first_name || "",
         middle_name: raw?.middle_name || "",
         last_name: raw?.last_name || "",
         user_dob: raw?.user_dob || "",
-        user_city: raw?.user_city || "",
-        user_age: raw?.user_age || "",
+        user_city: raw?.user_city || raw?.city || raw?.city_name || "",
+        user_age: calculatedAge,
         mobile: raw?.mobile || "",
         user_whatsapp: raw?.user_whatsapp || "",
         email: raw?.email || "",
         user_occupation: raw?.user_occupation || "",
         user_education: raw?.user_education || "",
         resi_address: raw?.resi_address || "",
-        place_of_residence: raw?.place_of_residence || "",
+        branch_id: raw?.branch_id ? String(raw.branch_id) : "",
         native_place: raw?.native_place || "",
         user_doa: raw?.user_doa || "",
         user_married_status: raw?.user_married_status || "",
-        user_state: raw?.user_state || "",
-        user_pincode: raw?.user_pincode || "",
+        user_state: raw?.user_state || raw?.state || raw?.state_name || "",
+        user_pincode: raw?.user_pincode || raw?.pincode || raw?.pin || raw?.pin_code || "",
         user_group_mid: raw?.user_group_mid || "",
         user_status: raw?.user_status || "Active",
+        user_image: rawImage || null,
       });
     }
-  }, [decryptedId, materialByid]);
+  }, [targetMemberId, materialByid]);
 
+  const { data: branchdata } = useFetchBranch();
   const { data: blodGroupdata, isLoading: loadingbloodgroup } =
     useFetchBloodGroup();
   const { data: citydata, isLoading: loadingcity } = useFetchCity();
@@ -136,21 +220,36 @@ const MemberForm = () => {
   const { data: occupationdata, isLoading: loadingoccupation } =
     useFetchOccupation();
 
-  // const handleInputChange = (e, field) => {
-  //   const value = e.target ? e.target.value : e;
-  //   let updatedFormData = { ...formData, [field]: value };
+  const handleInputChange = (e, fieldName) => {
+    if (e?.target?.type === "file") {
+      const field = fieldName || e?.target?.name || "user_image";
+      const file = e?.target?.files?.[0] || null;
+      setFormData((prev) => ({ ...prev, [field]: file }));
+      if (file) {
+        setImagePreview(URL.createObjectURL(file));
+      }
+      return;
+    }
 
-  //   setFormData(updatedFormData);
-  // };
-  const handleInputChange = (e, field) => {
-    let value = e.target ? e.target.value : e;
+    const field = fieldName || e?.target?.name;
+    let value = e?.target ? e.target.value : e;
     if (
       ["user_age", "mobile", "user_whatsapp", "user_pincode"].includes(field)
     ) {
-      value = value.replace(/\D/g, "");
+      value = typeof value === "string" ? value.replace(/\D/g, "") : value;
     }
 
     let updatedFormData = { ...formData, [field]: value };
+
+    if (field === "user_dob") {
+      const birthYear = Number(value);
+      const currentYear = new Date().getFullYear();
+      if (birthYear && birthYear <= currentYear) {
+        updatedFormData.user_age = String(currentYear - birthYear);
+      } else {
+        updatedFormData.user_age = "";
+      }
+    }
 
     setFormData(updatedFormData);
   };
@@ -168,15 +267,6 @@ const MemberForm = () => {
         if (value === null || value === undefined) return false;
         return value.toString().trim() !== "";
       }).length;
-
-      // const missingFields = Object.entries(formCopy)
-      //   .filter(
-      //     ([, value]) =>
-      //       value === null ||
-      //       value === undefined ||
-      //       value.toString().trim() === ""
-      //   )
-      //   .map(([key]) => key);
 
       const totalFields = totalFormFields;
       const filledFields = filledFormFields;
@@ -198,23 +288,14 @@ const MemberForm = () => {
     if (!formData.middle_name) missingFields.push("Middle Name");
     if (!formData.last_name) missingFields.push("Last Name");
     if (!formData.user_dob) missingFields.push("Born Year");
-    if (!formData.user_city) missingFields.push("City");
     if (!formData.user_age) missingFields.push("Age");
     if (!formData.mobile) missingFields.push("Mobile");
-    // if (!formData.user_whatsapp) missingFields.push("WhatsApp Number");
-    // if (!formData.email) missingFields.push("Email");
+    if (!formData.email?.trim()) missingFields.push("Email");
     if (!formData.user_occupation) missingFields.push("Occupation");
-    // if (!formData.user_education) missingFields.push("Education");
-    // if (!formData.resi_address) missingFields.push("Residential Address");
-    // if (!formData.place_of_residence) missingFields.push("Place of Residence");
-    // if (!formData.native_place) missingFields.push("Native Place");
-    // if (!formData.user_doa) missingFields.push("Date of Anniversary");
-    if (!formData.user_state) missingFields.push("State");
-    if (!formData.user_pincode) missingFields.push("Pincode");
-    // if (!formData.user_married_status) missingFields.push("Marital Status");
-    if (!formData.user_group_mid && !isEditMode)
+    if (!formData.resi_address) missingFields.push("Address");
+    if (userType != 1 && !formData.user_group_mid && !isEditMode)
       missingFields.push("Group MID");
-    if (!formData.user_status && isEditMode)
+    if (userType != 1 && !formData.user_status && isEditMode)
       missingFields.push("Status is Required");
     if (missingFields.length > 0) {
       toast({
@@ -235,21 +316,56 @@ const MemberForm = () => {
     }
 
     try {
+      const targetId = isEditMode ? (targetMemberId || decryptedId) : null;
+      const isFile = formData.user_image instanceof File;
+
+      let payload;
+      let method = isEditMode ? "put" : "post";
+      let url = isEditMode ? `${MEMBER_LIST}/${targetId}` : MEMBER_LIST;
+
+      if (isFile) {
+        payload = new FormData();
+        Object.entries(formData).forEach(([key, value]) => {
+          if (value === null || value === undefined || value === "") return;
+          if (key === "user_image" && value instanceof File) {
+            payload.append("user_image", value);
+          } else if (key !== "user_image") {
+            payload.append(key, value);
+          }
+        });
+        if (isEditMode) {
+          payload.append("_method", "PUT");
+          url = `${MEMBER_LIST}/${targetId}?_method=PUT`;
+          method = "post";
+        }
+      } else {
+        payload = { ...formData };
+        if (typeof payload.user_image === "string" || !payload.user_image) {
+          delete payload.user_image;
+        }
+      }
+
       const response = await submitTrigger({
-        url: isEditMode ? `${MEMBER_LIST}/${decryptedId}` : MEMBER_LIST,
-        method: isEditMode ? "put" : "post",
-        data: formData,
+        url,
+        method,
+        data: payload,
+        headers: isFile ? { "Content-Type": "multipart/form-data" } : {},
       });
-      if (response?.code == 201) {
+      if (response?.code == 200 || response?.code == 201) {
         toast({
           title: "Success",
-          description: response.message,
+          description: response.message || "Member details updated successfully",
         });
-        navigate("/crm/member");
+        if (userType == 1) {
+          if (refetch) await refetch();
+          setShowUpdateSuccessModal(true);
+        } else {
+          navigate("/crm/member");
+        }
       } else {
         toast({
           title: "Error",
-          description: response.message,
+          description: response.message || "Failed to update member",
           variant: "destructive",
         });
       }
@@ -257,7 +373,7 @@ const MemberForm = () => {
       toast({
         title: "Error",
         description:
-          error?.response?.data?.message || "Failed to save raw material",
+          error?.response?.data?.message || "Failed to save member details",
         variant: "destructive",
       });
     }
@@ -273,6 +389,318 @@ const MemberForm = () => {
   ) {
     return <LoaderComponent />;
   }
+
+  if (userType == 1) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        {/* Header with Dakshin Ekkam brand */}
+        <header className="bg-white border-b border-gray-200 py-3.5 px-6 sm:px-12 flex items-center justify-between shadow-xs sticky top-0 z-40">
+          <div className="flex items-center gap-3">
+            <h1 className="text-xl font-bold text-gray-800">Dakshin Ekkam</h1>
+            <span className="text-xs bg-red-100 text-[#db2920] font-semibold px-2.5 py-0.5 rounded-full">
+              Member Profile
+            </span>
+          </div>
+        </header>
+
+        {/* Member Update Form matching Website Signup UI */}
+        <main className="flex-1 py-8 px-4 sm:px-6 lg:px-8">
+          <form
+            onSubmit={handleSubmit}
+            className="max-w-6xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-10"
+          >
+            <h2 className="text-4xl font-bold mb-6 text-gray-800 border-b pb-4 flex items-center justify-center">
+              Update Your Profile
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <InputField
+                label="First Name"
+                name="first_name"
+                value={formData.first_name}
+                onChange={handleInputChange}
+                placeholder="Enter first name"
+                startIcon={<User size={18} />}
+                required
+              />
+              <InputField
+                label="Middle Name"
+                name="middle_name"
+                value={formData.middle_name}
+                onChange={handleInputChange}
+                startIcon={<User size={18} />}
+                placeholder="Enter middle name"
+                required
+              />
+              <InputField
+                label="Last Name"
+                name="last_name"
+                value={formData.last_name}
+                onChange={handleInputChange}
+                startIcon={<User size={18} />}
+                placeholder="Enter last name"
+                required
+              />
+              <SelectField
+                label="Born Year"
+                name="user_dob"
+                value={formData.user_dob}
+                onChange={handleInputChange}
+                options={yearOptions}
+                placeholder="Select Born Year"
+                required
+              />
+              <InputField
+                label="Age"
+                name="user_age"
+                value={formData.user_age}
+                disabled
+                readOnly
+                placeholder="Auto-calculated from Born Year"
+                startIcon={<Calendar size={18} />}
+                required
+                maxLength={3}
+              />
+              <InputField
+                label="Email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="Enter email"
+                startIcon={<Mail size={18} />}
+                required
+              />
+              <InputField
+                label="Mobile"
+                type="text"
+                name="mobile"
+                value={formData.mobile}
+                onChange={handleInputChange}
+                placeholder="Enter 10-digit number"
+                startIcon={<Phone size={18} />}
+                required
+                maxLength={10}
+              />
+              <InputField
+                label="WhatsApp"
+                type="text"
+                name="user_whatsapp"
+                value={formData.user_whatsapp}
+                onChange={handleInputChange}
+                placeholder="Enter WhatsApp number"
+                startIcon={<MessageCircle size={18} />}
+                maxLength={10}
+              />
+              <InputField
+                label="Education"
+                name="user_education"
+                value={formData.user_education}
+                onChange={handleInputChange}
+                placeholder="Enter education"
+                startIcon={<Book size={18} />}
+              />
+              <SelectField
+                label="Occupation"
+                name="user_occupation"
+                value={formData.user_occupation}
+                onChange={handleInputChange}
+                options={
+                  occupationdata?.data?.map((occupation) => ({
+                    value: occupation.occupation,
+                    label: occupation.occupation,
+                  })) || []
+                }
+                required
+                startIcon={<Briefcase size={18} />}
+              />
+              <SelectField
+                label="Marital Status"
+                name="user_married_status"
+                value={formData.user_married_status}
+                onChange={handleInputChange}
+                options={MarriedStatus}
+                startIcon={<Heart size={18} />}
+              />
+              <InputField
+                label="Date of Anniversary"
+                type="date"
+                name="user_doa"
+                value={formData.user_doa}
+                onChange={handleInputChange}
+                startIcon={<Heart size={18} />}
+              />
+              <SelectField
+                label="Native Place in Kutch"
+                name="native_place"
+                value={formData.native_place}
+                onChange={handleInputChange}
+                options={
+                  nativedata?.data?.map((native_place) => ({
+                    value: native_place.native_place,
+                    label: native_place.native_place,
+                  })) || []
+                }
+                startIcon={<MapPin size={18} />}
+              />
+              <SelectField
+                label="Branch"
+                name="branch_id"
+                value={formData.branch_id}
+                onChange={handleInputChange}
+                options={
+                  branchdata?.data?.map((branchdata) => ({
+                    value: String(branchdata.id),
+                    label: branchdata.branch_name,
+                  })) || []
+                }
+                startIcon={<GitBranch size={18} />}
+              />
+
+              {/* Address, City, State, Pin all together in two rows */}
+              <div className="md:col-span-2 lg:col-span-3">
+                <InputField
+                  label="Address"
+                  name="resi_address"
+                  type="textarea"
+                  value={formData.resi_address}
+                  onChange={handleInputChange}
+                  placeholder="Enter full address"
+                  startIcon={<Home size={18} />}
+                  required
+                />
+              </div>
+              {/* <SelectField
+                label="City"
+                name="user_city"
+                value={formData.user_city}
+                onChange={handleInputChange}
+                options={
+                  citydata?.data?.map((city) => ({
+                    value: city.city,
+                    label: city.city,
+                  })) || []
+                }
+                startIcon={<MapPin size={18} />}
+              /> */}
+              {/* <SelectField
+                label="State"
+                name="user_state"
+                value={formData.user_state}
+                onChange={handleInputChange}
+                options={
+                  statedata?.data?.map((state) => ({
+                    value: state.state_name,
+                    label: state.state_name,
+                  })) || []
+                }
+                startIcon={<Home size={18} />}
+              /> */}
+              {/* <InputField
+                label="Pincode"
+                name="user_pincode"
+                value={formData.user_pincode}
+                onChange={handleInputChange}
+                startIcon={<Locate size={18} />}
+                maxLength={6}
+              /> */}
+
+              {/* Photo Upload & Preview */}
+              <div className="md:col-span-2 lg:col-span-3">
+                <div className="max-w-md">
+                  <InputField
+                    ref={fileInputRef}
+                    label="Photo"
+                    type="file"
+                    name="user_image"
+                    onChange={handleInputChange}
+                    startIcon={<User size={18} />}
+                    accept="image/*"
+                  />
+                  {imagePreview && (
+                    <div className="mt-2 flex items-center gap-3 p-2 bg-gray-50 border border-gray-200 rounded-lg">
+                      <img
+                        src={imagePreview}
+                        alt="Profile Preview"
+                        className="w-14 h-14 object-cover rounded-md border border-gray-300"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                        }}
+                      />
+                      <div className="text-xs text-gray-500">
+                        <p className="font-medium text-gray-700">Member Photo</p>
+                        <p>Upload a new file to change</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={submitLoading}
+              className={`w-full mt-6 text-white font-medium py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 text-base shadow-sm ${submitLoading ? "cursor-not-allowed opacity-70" : ""
+                }`}
+              style={{ background: "#db2920" }}
+              onMouseEnter={(e) => {
+                if (!submitLoading) e.currentTarget.style.background = "#9b1c15";
+              }}
+              onMouseLeave={(e) => {
+                if (!submitLoading) e.currentTarget.style.background = "#db2920";
+              }}
+            >
+              {submitLoading && <Loader className="w-5 h-5 animate-spin" />}
+              {submitLoading ? "Updating..." : "Update"}
+            </button>
+          </form>
+        </main>
+
+        {/* Post-update popup modal */}
+        {showUpdateSuccessModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+            <div className="bg-white rounded-2xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-gray-100 text-center transform transition-all animate-in zoom-in-95">
+              <div className="mx-auto w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                <CheckCircle2 size={36} />
+              </div>
+
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Profile Updated!
+              </h3>
+              <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+                Your details have been successfully saved. Would you like to sign out or do you still need to update anything else?
+              </p>
+
+              <div className="flex flex-col-reverse sm:flex-row gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowUpdateSuccessModal(false)}
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition text-sm cursor-pointer"
+                >
+                  Still Need to Update
+                </button>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex-1 px-4 py-2.5 rounded-xl text-white font-medium transition text-sm shadow-sm cursor-pointer"
+                  style={{ background: "#db2920" }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background = "#9b1c15")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background = "#db2920")
+                  }
+                >
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <Page>
       <div className="p-0">
@@ -352,16 +780,18 @@ const MemberForm = () => {
                       Age <span className="text-red-500">*</span>
                     </label>
                     <Input
-                      className="bg-white"
+                      className="bg-gray-100 cursor-not-allowed border border-gray-300 rounded-lg w-full focus:ring-0 text-gray-700"
                       value={formData.user_age}
-                      onChange={(e) => handleInputChange(e, "user_age")}
+                      disabled
+                      readOnly
+                      placeholder="Auto-calculated from Born Year"
                     />
                   </div>{" "}
                   <div>
                     <label
                       className={`block  ${ButtonConfig.cardLabel} text-sm mb-2 font-medium `}
                     >
-                      Email
+                      Email <span className="text-red-500">*</span>
                     </label>
                     <Input
                       type="email"
@@ -502,16 +932,36 @@ const MemberForm = () => {
                       placeholder="Select Native"
                     />
                   </div>
-                  <div className="md:col-span-2">
+                  <div>
                     <label
                       className={`block  ${ButtonConfig.cardLabel} text-sm mb-2 font-medium `}
                     >
-                      Address
+                      Branch
+                    </label>
+
+                    <MemoizedSelect
+                      value={formData.branch_id}
+                      onChange={(e) => handleInputChange(e, "branch_id")}
+                      options={
+                        branchdata?.data?.map((branch) => ({
+                          value: String(branch.id),
+                          label: branch.branch_name,
+                        })) || []
+                      }
+                      placeholder="Select Branch"
+                    />
+                  </div>
+                  <div className="md:col-span-2 lg:col-span-3 xl:col-span-4">
+                    <label
+                      className={`block  ${ButtonConfig.cardLabel} text-sm mb-2 font-medium `}
+                    >
+                      Address <span className="text-red-500">*</span>
                     </label>
                     <Textarea
                       className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 "
                       value={formData.resi_address}
                       onChange={(e) => handleInputChange(e, "resi_address")}
+                      placeholder="Enter full address"
                       maxLength={800}
                     />
                   </div>
@@ -519,7 +969,7 @@ const MemberForm = () => {
                     <label
                       className={`block  ${ButtonConfig.cardLabel} text-sm mb-2 font-medium `}
                     >
-                      City <span className="text-red-500">*</span>
+                      City
                     </label>
 
                     <MemoizedSelect
@@ -538,7 +988,7 @@ const MemberForm = () => {
                     <label
                       className={`block  ${ButtonConfig.cardLabel} text-sm mb-2 font-medium `}
                     >
-                      State <span className="text-red-500">*</span>
+                      State
                     </label>
                     <MemoizedSelect
                       value={formData.user_state}
@@ -556,7 +1006,7 @@ const MemberForm = () => {
                     <label
                       className={`block  ${ButtonConfig.cardLabel} text-sm mb-2 font-medium `}
                     >
-                      Pincode <span className="text-red-500">*</span>
+                      Pincode
                     </label>
                     <Input
                       className="bg-white"
@@ -579,21 +1029,6 @@ const MemberForm = () => {
                       />
                     </div>
                   )}
-                  <div>
-                    <label
-                      className={`block  ${ButtonConfig.cardLabel} text-sm mb-2 font-medium `}
-                    >
-                      Place of Residence
-                    </label>
-                    <Input
-                      className="bg-white border border-gray-300 rounded-lg w-full focus:ring-2 "
-                      value={formData.place_of_residence}
-                      onChange={(e) =>
-                        handleInputChange(e, "place_of_residence")
-                      }
-                      maxLength={50}
-                    />
-                  </div>
                   {isEditMode && (
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-2">

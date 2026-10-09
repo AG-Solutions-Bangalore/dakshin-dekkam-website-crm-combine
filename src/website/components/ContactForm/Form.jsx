@@ -143,6 +143,7 @@
 // export default Form;
 import { useState } from "react";
 import InputField from "../common/InputField";
+import CaptchaField, { useCaptcha } from "../common/CaptchaField";
 import { Loader } from "lucide-react";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { CREATE_WEB_ENQUIRY } from "@/api";
@@ -158,6 +159,15 @@ const Form = () => {
   });
   const [errors, setErrors] = useState({});
   const { trigger: submitTrigger, loading: submitLoading } = useApiMutation();
+  const {
+    captchaCode,
+    captchaInput,
+    setCaptchaInput,
+    honeypot,
+    setHoneypot,
+    refreshCaptcha,
+    validateCaptcha,
+  } = useCaptcha();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -178,6 +188,12 @@ const Form = () => {
     if (!formData.email_id.trim()) newErrors.email_id = "Email is required";
     if (!formData.description.trim())
       newErrors.description = "Description is required";
+
+    const captchaResult = validateCaptcha();
+    if (!captchaResult.isValid) {
+      newErrors.captcha = captchaResult.message;
+    }
+
     return newErrors;
   };
 
@@ -189,6 +205,7 @@ const Form = () => {
       Project: "",
       description: "",
     });
+    refreshCaptcha();
   };
 
   const handleSubmit = async (e) => {
@@ -263,6 +280,20 @@ const Form = () => {
           error={errors.description}
           required
           placeholder="Anything else you want to communicate"
+        />
+      </div>
+      <div className="w-full max-w-md mt-1 mb-2">
+        <CaptchaField
+          captchaCode={captchaCode}
+          captchaInput={captchaInput}
+          onChange={(e) => {
+            setCaptchaInput(e.target.value);
+            if (errors.captcha) setErrors((prev) => ({ ...prev, captcha: "" }));
+          }}
+          onRefresh={refreshCaptcha}
+          honeypot={honeypot}
+          onHoneypotChange={(e) => setHoneypot(e.target.value)}
+          error={errors.captcha}
         />
       </div>
       <div className="mx-0 my-2.5 w-full flex justify-center">
