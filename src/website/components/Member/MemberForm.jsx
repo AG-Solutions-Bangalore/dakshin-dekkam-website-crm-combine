@@ -158,12 +158,13 @@
 import { PANEL_LOGIN } from "@/api";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { Loader, Lock, Phone, User } from "lucide-react";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { showErrorToast } from "../../utils/toast";
 import InputField from "../common/InputField";
 import { loginSuccess } from "@/redux/slices/AuthSlice";
+import { encryptId } from "@/crm/utils/encyrption/Encyrption";
 
 const MemberForm = () => {
   const [formData, setFormData] = useState({ mobile: "", password: "" });
@@ -171,6 +172,8 @@ const MemberForm = () => {
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { token, id: authUserId } = useSelector((state) => state.auth);
+  const loginFormRef = useRef(null);
 
   const handleChange = (e) => {
     let { name, value } = e.target;
@@ -186,6 +189,17 @@ const MemberForm = () => {
       newErrors.mobile = "Mobile number must be exactly 10 digits";
     if (!formData.password.trim()) newErrors.password = "Password is required";
     return newErrors;
+  };
+
+  const handleUpdateClick = () => {
+    if (token && authUserId) {
+      navigate(`/crm/member-form/${encodeURIComponent(encryptId(authUserId))}`);
+    } else {
+      showErrorToast("Please log in with your credentials to view and update your details.");
+      if (loginFormRef.current) {
+        loginFormRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -230,7 +244,13 @@ const MemberForm = () => {
             login_type: "website",
           }),
         );
-        navigate("/crm/home");
+        if (UserInfo.user?.user_type == 1) {
+          navigate(
+            `/crm/member-form/${encodeURIComponent(encryptId(UserInfo.user.id))}`
+          );
+        } else {
+          navigate("/crm/home");
+        }
       } else {
         showErrorToast(res?.message || "Login failed: Unexpected response.");
       }
@@ -241,30 +261,32 @@ const MemberForm = () => {
 
   return (
     <>
-    <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-6 mb-6">
-  <div className="flex items-center gap-3 mb-3">
-    <div className="h-12 w-12 rounded-full bg-red-100 flex items-center justify-center">
-      <User className="h-6 w-6 text-red-600" />
-    </div>
+      <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-6 mb-6">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="h-12 w-12 rounded-full bg-red-100 flex items-center justify-center">
+            <User className="h-6 w-6 text-red-600" />
+          </div>
 
-    <div>
-      <h3 className="text-xl font-bold text-gray-800">
-        Already a member?
-      </h3>
-      <p className="text-sm text-gray-500">
-        Fill your latest information.
-      </p>
-    </div>
-  </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-800">
+              Already a member?
+            </h3>
+            <p className="text-sm text-gray-500">
+              Log in below to view and update your latest information.
+            </p>
+          </div>
+        </div>
 
-  <Link
-    to="/signup"
-    className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-[#db2920] px-5 py-3 font-semibold text-white transition hover:bg-[#b52019]"
-  >
-    Update Member Details
-  </Link>
-</div>
-    <div className="max-w-md mx-auto my-6 rounded-xl md:px-6">
+        <button
+          type="button"
+          onClick={handleUpdateClick}
+          className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-[#db2920] px-5 py-3 font-semibold text-white transition hover:bg-[#b52019]"
+        >
+          Update Member Details
+        </button>
+      </div>
+
+      <div ref={loginFormRef} className="max-w-md mx-auto my-6 rounded-xl md:px-6">
       <form onSubmit={handleSubmit}>
         <h2 className="text-xl font-semibold mb-4 text-gray-800">
           Member Area

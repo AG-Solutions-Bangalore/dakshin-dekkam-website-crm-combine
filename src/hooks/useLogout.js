@@ -16,7 +16,7 @@ const useLogout = () => {
       dispatch(logout());
 
       if (loginType == "website") {
-        navigate("/");
+        navigate("/member");
       } else {
         navigate("/crm");
       }

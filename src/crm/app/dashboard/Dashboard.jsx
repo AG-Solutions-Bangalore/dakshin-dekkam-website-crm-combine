@@ -19,6 +19,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import EventChart from "./EventChart";
+import { encryptId } from "@/crm/utils/encyrption/Encyrption";
 const colors = [
   "bg-blue-600",
   "bg-green-600",
@@ -44,7 +45,16 @@ const Dashboard = () => {
   });
 
   const authBranchId = useSelector((state) => state.auth.branch_id);
+  const authUserId = useSelector((state) => state.auth?.id);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userType == 1 && authUserId) {
+      navigate(
+        `/crm/member-form/${encodeURIComponent(encryptId(authUserId))}`
+      );
+    }
+  }, [userType, authUserId, navigate]);
 
   const branchOptions = useMemo(() => {
     if (!dashboard?.branch) return [{ value: 0, label: "All Branches" }];

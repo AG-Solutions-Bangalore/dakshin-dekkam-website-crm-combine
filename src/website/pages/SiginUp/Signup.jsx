@@ -5,13 +5,13 @@ import HeroSub from "../../components/HeroSub";
 const Signup = () => {
   const breadcrumbLinks = [
     { href: "/", text: "Home" },
-    { href: "/siginup", text: "Sigin Up / Update" },
+    { href: "/siginup", text: "Sigin Up " },
   ];
   return (
     <>
       <PageMeta title="Sign up | Dakshin Ekkam" />
       <HeroSub
-        title="Sign up / Update"
+        title="Sign up "
         breadcrumbLinks={breadcrumbLinks}
       />
       <CommunityForm />

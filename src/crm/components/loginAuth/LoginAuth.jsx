@@ -21,6 +21,7 @@ import LoginCarsol from "../common/LoginCarsol";
 import Logo from "../common/Logo";
 import ForgotPassword from "../ForgotPassword/ForgotPassword";
 import { loginSuccess } from "@/redux/slices/AuthSlice";
+import { encryptId } from "@/crm/utils/encyrption/Encyrption";
 
 export default function LoginAuth() {
   const [email, setEmail] = useState("");
@@ -91,7 +92,13 @@ export default function LoginAuth() {
             login_type: "panel",
           })
         );
-        navigate("/crm/home");
+        if (UserInfo.user?.user_type == 1) {
+          navigate(
+            `/crm/member-form/${encodeURIComponent(encryptId(UserInfo.user.id))}`
+          );
+        } else {
+          navigate("/crm/home");
+        }
       } else {
         toast({
           variant: "destructive",

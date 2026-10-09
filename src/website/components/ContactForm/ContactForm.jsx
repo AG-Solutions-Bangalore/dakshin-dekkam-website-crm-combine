@@ -60,7 +60,7 @@ const ContactForm = () => {
           </div>
           <div className="col-span-6" data-aos="fade-up" data-aos-delay="700">
             <img
-              src="/img/contact.webp"
+              src="/img/contact.jpg"
               alt="Contact"
               style={{
                 borderRadius: "0.5rem",

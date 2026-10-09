@@ -91,6 +91,8 @@ const InputField = forwardRef(
       maxLength,
       accept,
       className,
+      disabled,
+      readOnly,
     },
     ref,
   ) => {
@@ -107,7 +109,9 @@ const InputField = forwardRef(
         )}
 
         <div
-          className={`flex ${type === "textarea" ? "items-start" : "items-center"} border rounded-lg px-3 py-2 focus-within:ring-2 ${
+          className={`flex ${type === "textarea" ? "items-start" : "items-center"} border rounded-lg px-3 py-2 ${
+            disabled ? "bg-gray-100 cursor-not-allowed" : "focus-within:ring-2"
+          } ${
             error
               ? "border-red-500 focus-within:ring-red-400"
               : "border-[#f5c6c4] focus-within:ring-[#db2920]"
@@ -129,6 +133,8 @@ const InputField = forwardRef(
               rows={rows}
               placeholder={placeholder}
               maxLength={maxLength}
+              disabled={disabled}
+              readOnly={readOnly}
               className={`w-full resize-none outline-none bg-transparent text-gray-700 placeholder-gray-400 ${className || ""}`}
             />
           ) : type === "file" ? (
@@ -139,6 +145,8 @@ const InputField = forwardRef(
               type="file"
               onChange={onChange}
               accept={accept}
+              disabled={disabled}
+              readOnly={readOnly}
               className={`w-full outline-none bg-transparent text-gray-700 placeholder-gray-400 ${className || ""}`}
             />
           ) : (
@@ -151,6 +159,8 @@ const InputField = forwardRef(
               onChange={onChange}
               placeholder={placeholder}
               maxLength={maxLength}
+              disabled={disabled}
+              readOnly={readOnly}
               className={`w-full outline-none bg-transparent text-gray-700 placeholder-gray-400 ${className || ""}`}
             />
           )}
